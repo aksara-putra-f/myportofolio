@@ -1,4 +1,4 @@
-Nama : Aksara Putra F.
+Nama : Aksara Putra Fachruddin
 
 NPM : 2506597284
 
