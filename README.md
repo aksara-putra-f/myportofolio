@@ -18,6 +18,8 @@
 - **Minggu, 6 September 2026 (15:39 - 17:48)**
     - Membuat aturan styling untuk web portofolio bagian "Skills"
 
+- **Minggu, 6 Septermber 2026 (19:51 - 22:21)**
+    - Membuat aturan styling untuk web portofolio bagian "Experiences"
 
 # Refleksi Mandiri
 
