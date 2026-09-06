@@ -192,4 +192,84 @@ h1, .brand {
     .social-links {
         justify-content: flex-start;
     }
+
+}
+
+/* ------------------------------------- */
+/* */
+/* ------------------------------------- */
+
+.subjudul {
+    border-bottom: 5px solid var(--accent-dark);
+    font-size: 30px;
+}
+
+.card {
+    background-color: #d95d39;
+    border-radius: 10px;
+}
+
+/* ------------------------------------- */
+/* */
+/* ------------------------------------- */
+.project-container {
+    display:flex;
+    flex-wrap: wrap;
+    max-width: 960px;
+    height: auto;
+}
+
+.project-card {
+    margin: 10px 10px 10px 10px;
+    padding: 10px 10px 10px 10px;
+    width: 280px;
+    height: auto;
+}
+
+.project-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game-logo {
+    width: 192px;
+    height: 192px;
+    aspect-ratio: 1/1;
+    border-style: solid;
+    border-color: var(--accent-dark);
+    border-width: 5px;
+    border-radius: 10px;
+    background-color: bisque;
+}
+
+.project-desc {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--ink);
+}
+
+.project-link {
+    margin-top: auto;
+    padding: 10px;
+    text-align: center;
+}
+
+.project-link {
+    border-color: var(--accent-dark);
+    border-style: solid;
+    border-width: 5px;
+    border-radius: 10px;
+    width: 200px;
+    height: auto;
+    text-decoration: none;
+    font-weight: 650;
+    color: var(--ink);
+    background-color: #e3d9c9;
+    transition: background-color 0.2s ease
+}
+
+.project-link:hover {
+    background-color: var(--accent-dark);
 }
