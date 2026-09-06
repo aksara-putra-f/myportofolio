@@ -193,3 +193,89 @@ h1, .brand {
         justify-content: flex-start;
     }
 }
+
+/* ------------------------------------- */
+/* */
+/* ------------------------------------- */
+
+.subjudul {
+    border-bottom: 5px solid var(--accent-dark);
+    font-size: 30px;
+}
+
+.card {
+    background-color: #d95d39;
+    border-radius: 10px;
+    
+    outline: var(--ink);
+    outline-offset: 3px;
+    outline-style: solid;
+    outline-width: 3px;
+}
+
+/* ------------------------------------- */
+/* */
+/* ------------------------------------- */
+.experience-container {
+    max-width: 960px;
+    height: auto;
+    align-items: center;
+}
+
+.experience-card {
+    margin: 20px 0px 40px 0px;
+    max-width: 960px;
+    padding: 20px;
+}
+
+.experience-card {
+    display: grid;
+    grid-template-areas: 
+        "title term"
+        "place none" 
+        "description description";
+    grid-template-columns: 70% auto;
+    gap: 0px 20px;
+}
+
+.role-title {
+    grid-area: title;
+
+    font-weight: 800;
+    font-size: 25px;
+    color: var(--ink);
+}
+
+.role-place {
+    grid-area: place;
+
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--ink);
+}
+
+.role-description {
+    grid-area: description;
+    margin-top: 30px;
+    text-align: justify;
+}
+
+.role-description ul {
+    padding-left: 18px;
+}
+
+.role-term {
+    grid-area: term;
+    justify-self: right;
+    align-self: center;
+
+    background-color: var(--line);
+    padding: 8px 7px;
+    border-radius: 10px;
+    border-color: var(--accent-dark);
+    border-style: solid;
+    border-width: 5px;
+
+    color: var(--ink);
+    font-weight: 600;
+}
