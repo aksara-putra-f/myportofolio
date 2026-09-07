@@ -99,6 +99,7 @@ h1, .brand {
     color: var(--text-muted);
     max-width: 480px;
     margin-bottom: 1.5rem;
+    text-align: justify;
 }
 
 .meta-list {
@@ -425,6 +426,7 @@ h1, .brand {
 
     .hero-photo {
         max-width: 220px;
+        justify-self: center;
     }
 
     .social-links {
