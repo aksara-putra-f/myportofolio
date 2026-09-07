@@ -207,7 +207,7 @@ h1, .brand {
 #skill-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: left;
 }
 
 .skill-card {
@@ -596,5 +596,24 @@ h1, .brand {
 
     .project-link:hover {
         background-color: var(--accent-dark);
+    }
+
+    .skill-card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+        padding: 5px 5px;
+        margin: 10px 10px;
+        min-height: 40px;
+        height: auto;
+    }
+
+    .skill-card {
+        text-align: center;
+        color: var(--ink);
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 17px;
     }
 }
