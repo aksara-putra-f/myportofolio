@@ -528,4 +528,73 @@ h1, .brand {
     .role-description ul {
         padding-left: 18px;
     }
+    
+    #project-container {
+        display:flex;
+        flex-wrap: wrap;
+        height: auto;
+        justify-content: center;
+    }
+
+    .project-card {
+        display: grid;
+        grid-template-areas: 
+            "logo desc"
+            "link link";
+        column-gap: 10px;
+    }
+
+    .project-card {
+        margin: 10px 12px 10px 12px;
+        padding: 10px 10px 10px 10px;
+        width: 100%;
+        height: auto;
+    }
+
+    .game-logo {
+        grid-area: logo;
+        justify-self: center;
+
+        width: 100px;
+        height: 100px;
+        aspect-ratio: 1/1;
+        border-style: solid;
+        border-color: var(--accent-dark);
+        border-width: 4px;
+        border-radius: 10px;
+        background-color: bisque;
+    }
+
+    .project-desc {
+        grid-area: desc;
+        text-align: justify;
+        font-size: 12px;
+        color: var(--ink);
+    }
+
+    .project-link {
+        grid-area: link;
+        justify-self: center;
+        margin-top: auto;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .project-link {
+        border-color: var(--accent-dark);
+        border-style: solid;
+        border-width: 5px;
+        border-radius: 10px;
+        width: 150px;
+        height: auto;
+        text-decoration: none;
+        font-weight: 650;
+        color: var(--ink);
+        background-color: #e3d9c9;
+        transition: background-color 0.2s ease
+    }
+
+    .project-link:hover {
+        background-color: var(--accent-dark);
+    }
 }
