@@ -259,28 +259,6 @@ h1, .brand {
     grid-template-areas: "edu-desc term";
 }
 
-.experience-container {
-    max-width: 960px;
-    height: auto;
-    align-items: center;
-}
-
-.experience-card {
-    margin: 20px 0px 40px 0px;
-    max-width: 960px;
-    padding: 20px;
-}
-
-.experience-card {
-    display: grid;
-    grid-template-areas: 
-        "title term"
-        "place none" 
-        "description description";
-    grid-template-columns: 70% auto;
-    gap: 0px 20px;
-}
-
 .education-desc {
     grid-area: edu-desc;
 }
@@ -307,6 +285,28 @@ h1, .brand {
 
     width: 70%;
     height: 100%;
+}
+
+.experience-container {
+    max-width: 960px;
+    height: auto;
+    align-items: center;
+}
+
+.experience-card {
+    margin: 20px 0px 40px 0px;
+    max-width: 960px;
+    padding: 20px;
+}
+
+.experience-card {
+    display: grid;
+    grid-template-areas: 
+        "title term"
+        "place none" 
+        "description description";
+    grid-template-columns: 70% auto;
+    gap: 0px 20px;
 }
 
 .role-title {
