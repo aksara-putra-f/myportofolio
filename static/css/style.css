@@ -213,15 +213,18 @@ h1, .brand {
     outline-width: 3px;
 }
 
+.section-container {
+    width: 100%;
+    margin: 20px 0px 60px 0px;
+}
+
 /* ----------------------------------------------- */
 /* Mengatur aturan styling untuk section Skills*/
 /* ----------------------------------------------- */
-.skill-container {
+#skill-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    max-width: 960px;
-    margin: 20px 0px 20px 0px;
 }
 
 .skill-card {
@@ -245,12 +248,9 @@ h1, .brand {
 /* ----------------------------------------------- */
 /* Mengatur aturan styling untuk section Education */
 /* ----------------------------------------------- */
-
-.education-container {
+#education-container {
     display:block;
-    width: 100%;
     height: auto;
-    margin: 20px 0px 20px 0px;
 }
 
 .education-card {
@@ -262,6 +262,7 @@ h1, .brand {
 .education-card {
     display: grid;
     grid-template-areas: "edu-desc term";
+    grid-template-columns: 70% auto;
 }
 
 .education-desc {
@@ -277,33 +278,32 @@ h1, .brand {
 .education-term {
     grid-area: term;
     justify-self: right;
-    align-content: center;
-    
-    font-weight: 600;
-    text-align: center;
+    align-self: center;
     
     background-color: var(--line);
-    border-color: var(--accent-dark);
+    padding: 8px 7px;
     border-radius: 10px;
-    border-width: 5px;
+    border-color: var(--accent-dark);
     border-style: solid;
-    
-    width: 70%;
-    height: 100%;
+    border-width: 5px;
+    width: 80%;
+
+    color: var(--ink);
+    font-weight: 600;
+    text-align: center;
 }
 
 
 /* ------------------------------------------------ */
 /* Mengatur aturan styling untuk section Experience */
 /* ------------------------------------------------ */
-.experience-container {
-    max-width: 960px;
+#experience-container {
     height: auto;
     align-items: center;
 }
 
 .experience-card {
-    margin: 20px 0px 40px 0px;
+    margin: 10px 0px 20px 0px;
     max-width: 960px;
     padding: 20px;
 }
@@ -314,7 +314,7 @@ h1, .brand {
         "title term"
         "place none" 
         "description description";
-        grid-template-columns: 70% auto;
+    grid-template-columns: 70% auto;
     gap: 0px 20px;
 }
 
@@ -355,22 +355,22 @@ h1, .brand {
     border-color: var(--accent-dark);
     border-style: solid;
     border-width: 5px;
+    width: 90%;
 
     color: var(--ink);
     font-weight: 600;
+    text-align: center;
 }
 
 
 /* ---------------------------------------------- */
 /* Mengatur aturan styling untuk section Projects */
 /* ---------------------------------------------- */
-.project-container {
+#project-container {
     display:flex;
     flex-wrap: wrap;
-    max-width: 960px;
     height: auto;
     justify-content: center;
-    margin: 20px 0px 20px 0px;
 }
 
 .project-card {
