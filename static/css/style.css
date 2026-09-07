@@ -176,23 +176,6 @@ h1, .brand {
     border-top: 1px solid var(--line);
 }
 
-@media (max-width: 600px) {
-    .hero-grid {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-            "identity"
-            "photo"
-            "details";
-    }
-
-    .hero-photo {
-        max-width: 220px;
-    }
-
-    .social-links {
-        justify-content: flex-start;
-    }
-}
 
 /* ------------------------------------------------ */
 /* Mengatur Card-Card untuk Item-item tiap Section*/
@@ -426,4 +409,85 @@ h1, .brand {
 
 .project-link:hover {
     background-color: var(--accent-dark);
+}
+
+@media (max-width: 600px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "identity"
+            "photo"
+            "details";
+    }
+
+    .hero-photo {
+        max-width: 220px;
+    }
+
+    .social-links {
+        justify-content: flex-start;
+    }
+
+    .experience-card {
+        padding: 0px;
+    }
+
+    .experience-card {
+        display: block;
+    }
+
+    .role-title {
+        background-color: var(--line);
+        
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+        
+        padding: 10px 10px 0px 10px;
+
+        font-weight: 800;
+        font-size: 20px;
+        color: var(--ink);
+    }
+    
+    .role-place {
+        background-color: var(--line);
+
+        padding: 0px 10px 0px 10px;
+        
+        font-weight: 800;
+        font-size: 18px;
+        color: var(--ink);
+    }
+    
+    
+    .role-term {
+        background-color: var(--line);
+        border-color: var(--accent-dark);
+        border-style: solid;
+        border-width: 0px 0px 5px 0px;
+        border-radius: 0px 0px 10px 10px;
+        
+        padding: 0px 10px 10px 10px;
+
+        width: 100%;
+        
+        color: var(--ink);
+        font-weight: 600;
+        font-size: 16px;
+        text-align: justify;
+    }
+
+    .role-description {
+        padding: 10px;
+        margin: 0px;
+        grid-area: description;
+        text-align: justify;
+        font-size: 15px;
+    }
+
+    .role-description ul {
+        padding-left: 18px;
+    }
 }
