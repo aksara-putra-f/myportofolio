@@ -176,23 +176,6 @@ h1, .brand {
     border-top: 1px solid var(--line);
 }
 
-@media (max-width: 600px) {
-    .hero-grid {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-            "identity"
-            "photo"
-            "details";
-    }
-
-    .hero-photo {
-        max-width: 220px;
-    }
-
-    .social-links {
-        justify-content: flex-start;
-    }
-}
 
 /* ------------------------------------------------ */
 /* Mengatur Card-Card untuk Item-item tiap Section*/
@@ -224,7 +207,7 @@ h1, .brand {
 #skill-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: left;
 }
 
 .skill-card {
@@ -426,4 +409,41 @@ h1, .brand {
 
 .project-link:hover {
     background-color: var(--accent-dark);
+}
+
+@media (max-width: 600px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "identity"
+            "photo"
+            "details";
+    }
+
+    .hero-photo {
+        max-width: 220px;
+    }
+
+    .social-links {
+        justify-content: flex-start;
+    }
+
+    .skill-card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+        padding: 5px 5px;
+        margin: 10px 10px;
+        min-height: 40px;
+        height: auto;
+    }
+
+    .skill-card {
+        text-align: center;
+        color: var(--ink);
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 17px;
+    }
 }
