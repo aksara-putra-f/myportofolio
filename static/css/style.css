@@ -193,3 +193,51 @@ h1, .brand {
         justify-content: flex-start;
     }
 }
+
+/* ------------------------------------- */
+/* */
+/* ------------------------------------- */
+
+.subjudul {
+    border-bottom: 5px solid var(--accent-dark);
+    font-size: 30px;
+}
+
+.card {
+    background-color: #d95d39;
+    border-radius: 10px;
+
+    outline: var(--ink);
+    outline-offset: 3px;
+    outline-style: solid;
+    outline-width: 3px;
+}
+
+/* ------------------------------------- */
+/* */
+/* ------------------------------------- */
+
+.skill-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 960px;
+    margin: 20px 0px 20px 0px;
+}
+
+.skill-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    margin: 10px 12px 10px 12px;
+    min-height: 60px;
+    height: auto;
+}
+
+.skill-card {
+    text-align: center;
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 20px;
+}
