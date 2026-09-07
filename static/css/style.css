@@ -194,9 +194,9 @@ h1, .brand {
     }
 }
 
-/* ------------------------------------- */
-/* */
-/* ------------------------------------- */
+/* ------------------------------------------------ */
+/* Mengatur Card-Card untuk Item-item tiap Section*/
+/* ------------------------------------------------ */
 
 .subjudul {
     border-bottom: 5px solid var(--accent-dark);
@@ -213,9 +213,9 @@ h1, .brand {
     outline-width: 3px;
 }
 
-/* ------------------------------------- */
-/* */
-/* ------------------------------------- */
+/* ----------------------------------------------- */
+/* Mengatur aturan styling untuk section Skills*/
+/* ----------------------------------------------- */
 .skill-container {
     display: flex;
     flex-wrap: wrap;
@@ -240,6 +240,11 @@ h1, .brand {
     font-weight: 600;
     font-size: 20px;
 }
+
+
+/* ----------------------------------------------- */
+/* Mengatur aturan styling untuk section Education */
+/* ----------------------------------------------- */
 
 .education-container {
     display:block;
@@ -273,20 +278,24 @@ h1, .brand {
     grid-area: term;
     justify-self: right;
     align-content: center;
-
+    
     font-weight: 600;
     text-align: center;
-
+    
     background-color: var(--line);
     border-color: var(--accent-dark);
     border-radius: 10px;
     border-width: 5px;
     border-style: solid;
-
+    
     width: 70%;
     height: 100%;
 }
 
+
+/* ------------------------------------------------ */
+/* Mengatur aturan styling untuk section Experience */
+/* ------------------------------------------------ */
 .experience-container {
     max-width: 960px;
     height: auto;
@@ -305,7 +314,7 @@ h1, .brand {
         "title term"
         "place none" 
         "description description";
-    grid-template-columns: 70% auto;
+        grid-template-columns: 70% auto;
     gap: 0px 20px;
 }
 
@@ -319,7 +328,7 @@ h1, .brand {
 
 .role-place {
     grid-area: place;
-
+    
     font-weight: 800;
     font-size: 20px;
     color: var(--ink);
@@ -339,7 +348,7 @@ h1, .brand {
     grid-area: term;
     justify-self: right;
     align-self: center;
-
+    
     background-color: var(--line);
     padding: 8px 7px;
     border-radius: 10px;
@@ -351,6 +360,10 @@ h1, .brand {
     font-weight: 600;
 }
 
+
+/* ---------------------------------------------- */
+/* Mengatur aturan styling untuk section Projects */
+/* ---------------------------------------------- */
 .project-container {
     display:flex;
     flex-wrap: wrap;
