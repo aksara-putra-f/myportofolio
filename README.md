@@ -30,6 +30,10 @@
 - **Senin, 7 September 2026 (15:38 - 18:10 WIB)**
     - Membuat aturan styling pada section Education, Skill, Experience, dan Project untuk tampilan mobile
 
+- **Senin, 7 September 2026 (21:12 WIB)**
+    - Mengatur text alignment bio pada section 'About Me' menjadi justify
+    - Mengatur gambar foto diri untuk berada di tengah layar pada tampilan mobile
+
 
 # Log Penggunaan AI
 **Tanggal:** Sabtu, 5 September 2026
