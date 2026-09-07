@@ -176,23 +176,6 @@ h1, .brand {
     border-top: 1px solid var(--line);
 }
 
-@media (max-width: 600px) {
-    .hero-grid {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-            "identity"
-            "photo"
-            "details";
-    }
-
-    .hero-photo {
-        max-width: 220px;
-    }
-
-    .social-links {
-        justify-content: flex-start;
-    }
-}
 
 /* ------------------------------------------------ */
 /* Mengatur Card-Card untuk Item-item tiap Section*/
@@ -426,4 +409,61 @@ h1, .brand {
 
 .project-link:hover {
     background-color: var(--accent-dark);
+}
+
+
+/* --------------------- */
+/* Untuk tampilan mobile */
+/* --------------------- */
+@media (max-width: 600px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "identity"
+            "photo"
+            "details";
+    }
+
+    .hero-photo {
+        max-width: 220px;
+    }
+
+    .social-links {
+        justify-content: flex-start;
+    }
+
+    .education-card {
+        padding: 0px;
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+            "term"
+            "edu-desc";
+    }
+
+    .education-desc {
+        grid-area: edu-desc;
+        padding: 10px;
+    }
+
+    .education-term {
+        border-width: 0px;
+        padding: 5px 0px;
+        width: 100%;
+    }
+
+    .education-term {
+        grid-area: term;
+        justify-self: center;
+        align-self: center;
+        
+        
+        background-color: var(--line);
+        border-bottom-color: var(--accent-dark);
+        border-bottom-style: solid;
+        border-bottom-width: 5px;
+    
+        color: var(--ink);
+        font-weight: 600;
+        text-align: center;
+    }
 }
