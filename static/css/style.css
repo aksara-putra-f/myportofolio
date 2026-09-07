@@ -193,3 +193,74 @@ h1, .brand {
         justify-content: flex-start;
     }
 }
+
+/* ------------------------------------- */
+/* */
+/* ------------------------------------- */
+
+.subjudul {
+    border-bottom: 5px solid var(--accent-dark);
+    font-size: 30px;
+}
+
+.card {
+    background-color: #d95d39;
+    border-radius: 10px;
+
+    outline: var(--ink);
+    outline-offset: 3px;
+    outline-style: solid;
+    outline-width: 3px;
+}
+
+/* ------------------------------------- */
+/* */
+/* ------------------------------------- */
+
+.education-container {
+    display:block;
+    width: 100%;
+    height: auto;
+    margin: 20px 0px 20px 0px;
+}
+
+.education-card {
+    margin: 10px 0px 20px 0px;
+    padding: 20px;
+    width: 100%;
+}
+
+.education-card {
+    display: grid;
+    grid-template-areas: "edu-desc term";
+    grid-template-columns: 70% auto;
+    gap: 0px 20px;
+}
+
+.education-desc {
+    grid-area: edu-desc;
+}
+
+.institution {
+    color: var(--ink);
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.education-term {
+    grid-area: term;
+    justify-self: right;
+    align-content: center;
+
+    font-weight: 600;
+    text-align: center;
+
+    background-color: var(--line);
+    border-color: var(--accent-dark);
+    border-radius: 10px;
+    border-width: 5px;
+    border-style: solid;
+
+    width: 70%;
+    height: 100%;
+}
