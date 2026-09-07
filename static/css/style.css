@@ -207,6 +207,11 @@ h1, .brand {
 .card {
     background-color: #d95d39;
     border-radius: 10px;
+
+    outline: var(--ink);
+    outline-offset: 3px;
+    outline-style: solid;
+    outline-width: 3px;
 }
 
 /* ------------------------------------- */
@@ -217,10 +222,12 @@ h1, .brand {
     flex-wrap: wrap;
     max-width: 960px;
     height: auto;
+    justify-content: center;
+    margin: 20px 0px 20px 0px;
 }
 
 .project-card {
-    margin: 10px 10px 10px 10px;
+    margin: 10px 12px 10px 12px;
     padding: 10px 10px 10px 10px;
     width: 280px;
     height: auto;
