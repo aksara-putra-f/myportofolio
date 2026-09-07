@@ -26,6 +26,9 @@
     - Membuat aturan styling untuk section education pada web portofolio
     - Melakukan merge pada setiap fitur ke main untuk melakukan uji hasil web app untuk tampilan desktop
 
+- **Senin, 7 September 2026 (15:38 - 18:10 WIB)**
+    - Membuat aturan styling pada section Education, Skill, Experience, dan Project untuk tampilan mobile
+
 # Refleksi Mandiri
 
 
