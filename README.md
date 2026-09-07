@@ -15,11 +15,16 @@
 - **Minggu, 6 September 2026 (09:00 - 13:39 WIB)**
     - Membuat aturan styling untuk web portofolio bagian "Projects"
 
-- **Minggu, 6 September 2026 (15:39 - 17:48)**
+- **Minggu, 6 September 2026 (15:39 - 17:48 WIB)**
     - Membuat aturan styling untuk web portofolio bagian "Skills"
 
-- **Minggu, 6 Septermber 2026 (19:51 - 22:21)**
+- **Minggu, 6 Septermber 2026 (19:51 - 22:21 WIB)**
     - Membuat aturan styling untuk web portofolio bagian "Experiences"
+
+- **Senin, 7 September 2026 (10:49 - 15:14 WIB)**
+    - Mengatur posisi dan menambahkan outline pada card-card di section Skills dan Projects
+    - Membuat aturan styling untuk section education pada web portofolio
+    - Melakukan merge pada setiap fitur ke main untuk melakukan uji hasil web app untuk tampilan desktop
 
 # Refleksi Mandiri
 
