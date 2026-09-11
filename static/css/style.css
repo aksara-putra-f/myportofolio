@@ -440,13 +440,6 @@ h1, .brand {
     gap: 1rem;
 }
 
-.experience-card {
-    padding: 1.25rem;
-    background-color: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-}
-
 .experience-category {
     color: var(--accent-dark);
     font-size: 0.75rem;
