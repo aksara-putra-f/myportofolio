@@ -34,6 +34,11 @@
     - Mengatur text alignment bio pada section 'About Me' menjadi justify
     - Mengatur gambar foto diri untuk berada di tengah layar pada tampilan mobile
 
+- **Sabtu, 12 September - Minggu, 13 September 2026**
+    - Membuat model data untuk Experience, Skill, Project, dan Education
+    - Membuat template untuk section Experience, Skill, Project, dan Education
+    - Membuat path pada urls.py untuk mendapatkan view template section Experience, Skill, Project, dan Education ketika mendapatkan request
+
 
 # Log Penggunaan AI
 **Tanggal:** Sabtu, 5 September 2026
