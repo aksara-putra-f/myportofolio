@@ -30,3 +30,15 @@ class Experience(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+
+
+class Education(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    year_start = models.CharField(default="Present", max_length=7, null=False, blank=False)
+    year_end = models.CharField(default="Present", max_length=7, null=False, blank=False)
+    institution_name = models.CharField(max_length=250, null=False, blank=False)
+    major = models.CharField(default="", max_length=250, null=False, blank=True)
+    activities = models.JSONField(default=list, null=False, blank=True)
+
+    def __str__(self):
+        return self.institution_name
