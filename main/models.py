@@ -30,3 +30,11 @@ class Experience(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+
+
+class Project(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    project_name = models.CharField(max_length=250, null=False, blank=False)
+    project_desc = models.TextField()
+    ext_link_provided = models.BooleanField()
+    ext_link = models.URLField()
