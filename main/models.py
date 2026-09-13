@@ -39,6 +39,7 @@ class Education(models.Model):
     institution_name = models.CharField(max_length=250, null=False, blank=False)
     major = models.CharField(default="", max_length=250, null=False, blank=True)
     activities = models.JSONField(default=list, null=False, blank=True)
+    institution_logo = models.ImageField(default="no_image_square.png", upload_to='institution_logo/', blank=False)
 
     def __str__(self):
         return self.institution_name

@@ -1,3 +1,4 @@
+{{% load static %}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,6 +31,7 @@
                 <div class="section-container" id="education-container">
                     {% for education in education_list %}
                         <article class="card education-card">
+                            <img src="{{ education.institution_logo.url }}"
                             <p class="education-desc">
                                 <span class="institution">{{ education.institution_name }}</span><br>
                                 <span class="major">{{ education.major }}</span>
