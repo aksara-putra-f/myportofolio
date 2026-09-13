@@ -20,28 +20,45 @@
         </div>
     </header>
 
-    <main>
-        <section class="experience-section" id="experience">
+    <main class="section-page">
+        <section id="experience-section-page">
             <div class="container">
                 <p class="section-kicker">Perjalanan saya sejauh ini</p>
                 <h1>Experience</h1>
 
-                <div class="experience-grid">
+                <div class="section-container" id="experience-container">
                     {% for experience in experience_list %}
                         <article class="card experience-card">
                             <span class="experience-category">
                                 {{ experience.get_category_display }}
                             </span>
-                            <h2>{{ experience.title }}</h2>
-                            <p class="experience-description">
-                                {{ experience.description }}
-                            </p>
 
                             {% if experience.is_ongoing %}
-                                <p class="experience-status">Sedang berlangsung</p>
+                                <p class="experience-status">Ongoing</p>
+                                <p class="role-term">{{ experience.started_at }} - Present</p>
                             {% else %}
-                                <p class="experience-status">Selesai</p>
+                                <p class="experience-status">Finished</p>
+                                <p class="role-term">{{ experience.started_at }} - {{ experience.ended_at }}</p>
                             {% endif %}
+
+                            <div class="role-title-place">
+                                <h2 class="role-title">{{ experience.title }}</h2>
+                                <h2 class="role-place">{{ experience.place }}</h2>
+                            </div>
+
+                            <span class="role-description">
+                                <p>
+                                    {{ experience.description }}
+                                    <br>
+                                    <br>
+                                </p>
+                                <p>Responsibilities:<br></p>
+                                <ul>
+                                    {% for item in experience.responsibilities_list %}
+                                        <li>{{ item }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </span>
                         </article>
                     {% empty %}
                         <p class="empty-state">
