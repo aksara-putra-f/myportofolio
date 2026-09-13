@@ -178,16 +178,16 @@ h1, .brand {
 }
 
 
-/* ------------------------------------------------ */
-/* Mengatur Card-Card untuk Item-item tiap Section*/
-/* ------------------------------------------------ */
+/* ----------------------------- */
+/* Mengatur Section Page Styling */
+/* ----------------------------- */
 
 .subjudul {
     border-bottom: 5px solid var(--accent-dark);
     font-size: 30px;
 }
 
-.card {
+.main-page .card {
     background-color: #d95d39;
     border-radius: 10px;
 
@@ -200,6 +200,24 @@ h1, .brand {
 .section-container {
     width: 100%;
     margin: 20px 0px 60px 0px;
+}
+
+.section-page {
+    padding: 4rem 0;
+    border-top: 1px solid var(--line);
+}
+
+.section-kicker {
+    color: var(--accent-dark);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.section-page h1 {
+    margin: 0.4rem 0 1.5rem;
+    font-size: 2rem;
 }
 
 /* ----------------------------------------------- */
@@ -233,48 +251,92 @@ h1, .brand {
 /* Mengatur aturan styling untuk section Education */
 /* ----------------------------------------------- */
 #education-container {
-    display:block;
-    height: auto;
-}
-
-.education-card {
-    margin: 10px 0px 20px 0px;
-    padding: 20px;
     width: 100%;
 }
 
-.education-card {
+.section-page .education-card {
     display: grid;
-    grid-template-areas: "edu-desc term";
-    grid-template-columns: 70% auto;
+    grid-template-areas: "logo edu-info";
+    grid-template-columns: 192px auto;
+    column-gap: 5px;
+    margin: 30px 0px;
+    align-items: center;
 }
 
-.education-desc {
-    grid-area: edu-desc;
+.section-page .institution-logo {
+    grid-area: logo;
+
+    width: 170px;
+    height: 170px;
+
+    outline: var(--ink);
+    outline-offset: 3px;
+    outline-style: solid;
+    outline-width: 3px;
+
+    border-radius: 10px;
 }
 
-.institution {
-    color: var(--ink);
-    font-size: 20px;
-    font-weight: 800;
+.section-page .education-info {
+    grid-area: edu-info;
+    display: grid;
+    grid-template-areas: 
+        "desc term"
+        "activity activity";
+    row-gap: 20px;
 }
 
-.education-term {
+.section-page .education-info {
+    background-color: var(--accent);
+    border-radius: 10px;
+
+    outline: var(--ink);
+    outline-offset: 3px;
+    outline-style: solid;
+    outline-width: 3px;
+
+    min-height: 100%;
+    padding: 20px;
+}
+
+.section-page .education-desc {
+    grid-area: desc;
+}
+
+.section-page .education-term {
     grid-area: term;
     justify-self: right;
-    align-self: center;
-    
+    align-self: flex-start;
+
     background-color: var(--line);
-    padding: 8px 7px;
+    padding: 4px 7px;
     border-radius: 10px;
     border-color: var(--accent-dark);
     border-style: solid;
     border-width: 5px;
-    width: 80%;
+    width: 70%;
 
     color: var(--ink);
     font-weight: 600;
     text-align: center;
+}
+
+.section-page .activities {
+    grid-area: activity;
+
+    padding: 0px 0px 0px 17px;
+}
+
+.institution {
+    color: var(--ink);
+    font-size: 25px;
+    font-weight: 800;
+}
+
+.major {
+    color: var(--ink);
+    font-size: 20px;
+    font-weight: 600;
 }
 
 
@@ -416,23 +478,7 @@ h1, .brand {
 /* ------------------------------------------------------------- */
 /* Styling elemen untuk page khusus experience (experience.html) */
 /* ------------------------------------------------------------- */
-.experience-section {
-    padding: 4rem 0;
-    border-top: 1px solid var(--line);
-}
 
-.section-kicker {
-    color: var(--accent-dark);
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
-.experience-section h1 {
-    margin: 0.4rem 0 1.5rem;
-    font-size: 2rem;
-}
 
 .experience-grid {
     display: grid;

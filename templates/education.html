@@ -21,32 +21,34 @@
         </div>
     </header>
 
-    <main>
-        <section class="section-page" id="experience-section-page">
+    <main class="section-page">
+        <section id="education-section-page">
             <div class="container">
-                <p class="section-kicker">My Experience So Far</p>
-                <h1>Experience</h1>
+                <p class="section-kicker">My Education Background</p>
+                <h1>Education</h1>
 
-                <div class="experience-grid">
-                    {% for experience in experience_list %}
-                        <article class="card experience-card">
-                            <span class="experience-category">
-                                {{ experience.get_category_display }}
-                            </span>
-                            <h2>{{ experience.title }}</h2>
-                            <p class="experience-description">
-                                {{ experience.description }}
-                            </p>
-
-                            {% if experience.is_ongoing %}
-                                <p class="experience-status">Sedang berlangsung</p>
-                            {% else %}
-                                <p class="experience-status">Selesai</p>
-                            {% endif %}
+                <div class="section-container" id="education-container">
+                    {% for education in education_list %}
+                        <article class="card education-card">
+                            <div>
+                                <img class="institution-logo" src="{{ education.institution_logo.url }}" alt="education.name">
+                            </div>
+                            <div class="education-info">
+                                <p class="education-desc">
+                                    <span class="institution">{{ education.institution_name }}</span><br>
+                                    <span class="major">{{ education.major }}</span>
+                                </p>
+                                <p class="education-term">{{ education.year_start }} - {{ education.year_end }}</p>
+                                <ul class="activities">
+                                    {% for activity in education.activities %}
+                                    <li>{{ activity }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </article>
                     {% empty %}
                         <p class="empty-state">
-                            No experience has been added
+                            No education background has been added.
                         </p>
                     {% endfor %}
                 </div>
