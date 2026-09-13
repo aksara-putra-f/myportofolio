@@ -1,4 +1,3 @@
-{{% load static %}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,8 +21,8 @@
         </div>
     </header>
 
-    <main class="education-page">
-        <section class="education-section" id="education">
+    <main class="section-page">
+        <section id="education-section-page">
             <div class="container">
                 <p class="section-kicker">My Education Background</p>
                 <h1>Education</h1>
@@ -31,18 +30,26 @@
                 <div class="section-container" id="education-container">
                     {% for education in education_list %}
                         <article class="card education-card">
-                            <img src="{{ education.institution_logo.url }}"
-                            <p class="education-desc">
-                                <span class="institution">{{ education.institution_name }}</span><br>
-                                <span class="major">{{ education.major }}</span>
-                            </p>
-                            <p class="education-term">{{ education.year_start }} - {{ education.year_end }}</p>
-                            <ul class="activities">
-                                {% for activity in education.activities %}
-                                <li>{{ activity }}</li>
-                                {% endfor %}
-                            </ul>
+                            <div>
+                                <img class="institution-logo" src="{{ education.institution_logo.url }}" alt="education.name">
+                            </div>
+                            <div class="education-info">
+                                <p class="education-desc">
+                                    <span class="institution">{{ education.institution_name }}</span><br>
+                                    <span class="major">{{ education.major }}</span>
+                                </p>
+                                <p class="education-term">{{ education.year_start }} - {{ education.year_end }}</p>
+                                <ul class="activities">
+                                    {% for activity in education.activities %}
+                                    <li>{{ activity }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </article>
+                    {% empty %}
+                        <p class="empty-state">
+                            No education background has been added.
+                        </p>
                     {% endfor %}
                 </div>
             </div>

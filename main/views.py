@@ -26,7 +26,7 @@ def show_experience(request):
 
 def show_education(request):
     context = {
-        "nama" : "Aksara Putra Fachruddin",
+        "name" : "Aksara Putra Fachruddin",
         "education_list" : Education.objects.all()
     }
     return render(request, "education.html", context)
