@@ -39,6 +39,9 @@
     - Membuat template untuk section Experience, Skill, Project, dan Education
     - Membuat path pada urls.py untuk mendapatkan view template section Experience, Skill, Project, dan Education ketika mendapatkan request
 
+- **Minggu, 13 September 2026**
+    - Membuat aturan styling pada style.css untuk template page section Experience, Skill, Project, dan Education
+
 
 # Log Penggunaan AI
 **Tanggal:** Sabtu, 5 September 2026
