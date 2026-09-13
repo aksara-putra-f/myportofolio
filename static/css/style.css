@@ -187,7 +187,7 @@ h1, .brand {
     font-size: 30px;
 }
 
-.main-page .card {
+.card {
     background-color: #d95d39;
     border-radius: 10px;
 
@@ -284,6 +284,7 @@ h1, .brand {
     color: var(--ink);
     font-weight: 600;
     font-size: 20px;
+    transition: font-size 0.2s;
 }
 
 .section-page .skill-desc {
@@ -312,6 +313,9 @@ h1, .brand {
     opacity: 1;
 }
 
+.section-page .skill-card:hover .skill-name {
+    font-size: 24px;
+}
 
 
 /* ----------------------------------------------- */
