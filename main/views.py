@@ -30,3 +30,12 @@ def show_education(request):
         "education_list" : Education.objects.all()
     }
     return render(request, "education.html", context)
+
+
+def show_project(request):
+    context = {
+        "name" : "Aksara Putra Fachruddin",
+        "project_list" : Project.objects.all()
+    }
+    return render(request, "project.html", context)
+
