@@ -33,8 +33,15 @@ class Experience(models.Model):
 
 
 class Project(models.Model):
+    MEDIA_TYPE = [
+        ('image', 'Image'),
+        ('video', 'Video')
+    ]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     project_name = models.CharField(max_length=250, null=False, blank=False)
     project_desc = models.TextField()
+    media = models.FileField(upload_to="project-media/", default="no_image_square.png", blank=False, null=True)
+    media_type = models.CharField(blank=False, choices=MEDIA_TYPE, default='image')
     ext_link_provided = models.BooleanField()
     ext_link = models.URLField()

@@ -202,6 +202,24 @@ h1, .brand {
     margin: 20px 0px 60px 0px;
 }
 
+.section-page {
+    padding: 4rem 0;
+    border-top: 1px solid var(--line);
+}
+
+.section-kicker {
+    color: var(--accent-dark);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.section-page h1 {
+    margin: 0.4rem 0 1.5rem;
+    font-size: 2rem;
+}
+
 /* ----------------------------------------------- */
 /* Mengatur aturan styling untuk section Skills*/
 /* ----------------------------------------------- */
@@ -351,29 +369,26 @@ h1, .brand {
 /* Mengatur aturan styling untuk section Projects */
 /* ---------------------------------------------- */
 #project-container {
-    display:flex;
-    flex-wrap: wrap;
-    height: auto;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    column-gap: 2rem;
 }
 
-.project-card {
+.section-page .project-card {
     margin: 10px 12px 10px 12px;
     padding: 10px 10px 10px 10px;
-    width: 280px;
-    height: auto;
+    width: 100%;
 }
 
-.project-card {
+.section-page .project-card {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.game-logo {
-    width: 192px;
-    height: 192px;
-    aspect-ratio: 1/1;
+.section-page .project-media {
+    max-width: 300px;
+    max-height: 300px;
     border-style: solid;
     border-color: var(--accent-dark);
     border-width: 5px;
@@ -381,20 +396,26 @@ h1, .brand {
     background-color: bisque;
 }
 
-.project-desc {
+.section-page .project-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.section-page .project-desc {
     margin-top: 10px;
     margin-bottom: 20px;
     text-align: center;
     color: var(--ink);
 }
 
-.project-link {
+.section-page .project-link {
     margin-top: auto;
     padding: 10px;
     text-align: center;
 }
 
-.project-link {
+.section-page .project-link {
     border-color: var(--accent-dark);
     border-style: solid;
     border-width: 5px;
@@ -408,59 +429,8 @@ h1, .brand {
     transition: background-color 0.2s ease
 }
 
-.project-link:hover {
+.section-page .project-link:hover {
     background-color: var(--accent-dark);
-}
-
-
-/* ------------------------------------------------------------- */
-/* Styling elemen untuk page khusus experience (experience.html) */
-/* ------------------------------------------------------------- */
-.experience-section {
-    padding: 4rem 0;
-    border-top: 1px solid var(--line);
-}
-
-.section-kicker {
-    color: var(--accent-dark);
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
-.experience-section h1 {
-    margin: 0.4rem 0 1.5rem;
-    font-size: 2rem;
-}
-
-.experience-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1rem;
-}
-
-.experience-category {
-    color: var(--accent-dark);
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-}
-
-.experience-card h2 {
-    margin: 0.5rem 0;
-    font-size: 1.25rem;
-}
-
-.experience-description,
-.empty-state {
-    color: var(--text-muted);
-}
-
-.experience-status {
-    margin-top: 1rem;
-    font-size: 0.85rem;
-    font-weight: 600;
 }
 
 

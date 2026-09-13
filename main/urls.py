@@ -1,5 +1,7 @@
 from django.urls import path
 from main.views import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = "main"
 
@@ -8,3 +10,5 @@ urlpatterns = [
     path("experience/", show_experience, name="show_experience"),
     path("project/", show_project, name="show_project")
 ]
+
+urlpatterns += static(settings.MEDIA_URL ,document_root=settings.MEDIA_ROOT)

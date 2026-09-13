@@ -21,21 +21,33 @@
         </div>
     </header>
 
-    <main>
+    <main class="section-page">
         <section class="project-section" id="project">
             <div class="container">
-                <p class="section-kicker">Project/s I've Been Done</p>
+                <p class="section-kicker">Projects I've Been Done</p>
                 <h1>Project</h1>
 
                 <div class="section-container", id="project-container">
                     {% for project in project_list %}
                         <article class="card project-card">
                             <p class="project-name">{{ project.project_name }}</p>
+                            
+                            {% if project.media_type == 'image' %}
+                                <img class="project-media" src="{{ project.media.url }}" alt="{{ project.name }}">
+                            {% elif project.media_type == 'video' %}
+                                <video class="project-media" autoplay muted loop controls>
+                                    <source src="{{ project.media.url }}" type="video/mp4">
+                                    <source src="{{ project.media.url }}" type="video/webm">
+                                    <source src="{{ project.media.url }}" type="video/ogg">
+                                </video>
+                            {% endif %}
+                            
                             <p class="project-desc">{{ project.project_desc }}</p>
 
                             {% if project.ext_link_provided %}
                                 <a class="project-link" href="{{ project.ext_link }}" target="_blank">See the Project</a>
                             {% endif %}
+
                         </article>
                     {% empty %}
                         <p class="empty-state">
