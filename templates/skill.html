@@ -16,40 +16,48 @@
             <nav>
                 <a href="{% url 'main:show_main' %}">Profile</a>
                 <a href="{% url 'main:show_experience' %}">Experience</a>
+                <a href="{% url 'main:show_skill' %}">Skill</a>
             </nav>
         </div>
     </header>
 
-    <main>
+    <main class="section-page">
         <section class="skill-section" id="skill">
             <div class="container">
                 <p class="section-kicker">Skills I have</p>
                 <h1>Skill</h1>
 
                 <div class="section-container" id="skill-container">
-                    <h2 class="skill-category">Hardskill</h2>
-                    {% for hardskill in hardskill_list %}
-                        <article class="card skill-card">
-                            <p class="skill-name">hardskill.name</p>
-                            <p class="skill-desc">hardskill.short_desc</p>
-                        </article>
-                    {% empty %}
-                        <p class="empty-state">
-                            No skill has been added
-                        </p>
-                    {% endfor %}
-                        
-                    <h2 class="skill-category">Softskill</h2>
-                    {% for softskill in softskill_list %}
-                        <article class="card skill-card">
-                            <p class="skill-name">softskill.name</p>
-                            <p class="skill-desc">softskill.short_desc</p>
-                        </article>
-                    {% empty %}
-                        <p class="empty-state">
-                            No skill has been added
-                        </p>
-                    {% endfor %}
+                    <div id="hardskill-container">
+                        <h2 class="skill-category-title">Hardskill</h2>
+                        <div class="skill-grid" id="hardskill">
+                            {% for hardskill in hardskill_list %}
+                                <article class="card skill-card">
+                                    <p class="skill-name">{{ hardskill.name }}</p>
+                                    <p class="skill-desc">{{ hardskill.short_desc }}</p>
+                                </article>
+                            {% empty %}
+                                <p class="empty-state">
+                                    No skill has been added
+                                </p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div id="softskill-container">
+                        <h2 class="skill-category-title">Softskill</h2>
+                        <div class="skill-grid" id="softskill">
+                            {% for softskill in softskill_list %}
+                                <article class="card skill-card">
+                                    <p class="skill-name">{{ softskill.name }}</p>
+                                    <p class="skill-desc">{{ softskill.short_desc }}</p>
+                                </article>
+                            {% empty %}
+                                <p class="empty-state">
+                                    No skill has been added
+                                </p>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

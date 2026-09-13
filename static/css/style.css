@@ -178,16 +178,16 @@ h1, .brand {
 }
 
 
-/* ------------------------------------------------ */
-/* Mengatur Card-Card untuk Item-item tiap Section*/
-/* ------------------------------------------------ */
+/* ----------------------------- */
+/* Mengatur Section Page Styling */
+/* ----------------------------- */
 
 .subjudul {
     border-bottom: 5px solid var(--accent-dark);
     font-size: 30px;
 }
 
-.card {
+.main-page .card {
     background-color: #d95d39;
     border-radius: 10px;
 
@@ -202,31 +202,111 @@ h1, .brand {
     margin: 20px 0px 60px 0px;
 }
 
+.section-page {
+    padding: 4rem 0;
+    border-top: 1px solid var(--line);
+}
+
+.section-kicker {
+    color: var(--accent-dark);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.section-page h1 {
+    margin: 0.4rem 0 1.5rem;
+    font-size: 2rem;
+}
+
 /* ----------------------------------------------- */
 /* Mengatur aturan styling untuk section Skills*/
 /* ----------------------------------------------- */
-#skill-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: left;
+.section-page #skill-container {
+    display: grid;
+    row-gap: 4rem;
 }
 
-.skill-card {
+.section-page .skill-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 200px);
+    gap: 2rem;
+}
+
+.section-page .skill-category-title{
     display: flex;
     justify-content: center;
     align-items: center;
     width: 200px;
-    margin: 10px 12px 10px 12px;
+    min-height: 60px;
+    margin-bottom: 1rem;
+    height: auto;
+}
+
+.section-page .skill-category-title {
+    background-color: var(--accent);
+    border-radius: 10px;
+    border-color: var(--ink);
+    border-width: 4px;
+    border-style: solid;
+}
+
+.section-page .skill-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
     min-height: 60px;
     height: auto;
 }
 
-.skill-card {
+.section-page .skill-card {
+    background-color: var(--line);
+    border-radius: 10px;
+    border-width: 4px;
+    border-color: var(--ink);
+    border-style: dashed;
+}
+
+.section-page .skill-card {
+    position: relative;
+    cursor: pointer;
+}
+
+.section-page .skill-name {
     text-align: center;
     color: var(--ink);
     font-weight: 600;
     font-size: 20px;
 }
+
+.section-page .skill-desc {
+    visibility: hidden;
+    width: 300px;
+    background-color: var(--text-muted);
+    color: var(--line);
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 10px;
+    z-index: 1;
+}
+
+.section-page .skill-desc {
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.section-page .skill-desc {
+    position: absolute;
+    top: 120%;
+}
+
+.section-page .skill-card:hover .skill-desc {
+    visibility: visible;
+    opacity: 1;
+}
+
 
 
 /* ----------------------------------------------- */
@@ -410,57 +490,6 @@ h1, .brand {
 
 .project-link:hover {
     background-color: var(--accent-dark);
-}
-
-
-/* ------------------------------------------------------------- */
-/* Styling elemen untuk page khusus experience (experience.html) */
-/* ------------------------------------------------------------- */
-.experience-section {
-    padding: 4rem 0;
-    border-top: 1px solid var(--line);
-}
-
-.section-kicker {
-    color: var(--accent-dark);
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
-.experience-section h1 {
-    margin: 0.4rem 0 1.5rem;
-    font-size: 2rem;
-}
-
-.experience-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1rem;
-}
-
-.experience-category {
-    color: var(--accent-dark);
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-}
-
-.experience-card h2 {
-    margin: 0.5rem 0;
-    font-size: 1.25rem;
-}
-
-.experience-description,
-.empty-state {
-    color: var(--text-muted);
-}
-
-.experience-status {
-    margin-top: 1rem;
-    font-size: 0.85rem;
-    font-weight: 600;
 }
 
 

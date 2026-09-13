@@ -26,7 +26,7 @@ def show_experience(request):
 def show_skill(request):
     context = {
         "name" : "Aksara Putra Fachruddin",
-        "hardskill_list" : Skill.objects.filter(skill_category='hardskill'),
-        "softskill_list" : Skill.objects.filter(skill_category='softskill')
+        "hardskill_list" : Skill.objects.all().filter(skill_category='hardskill'),
+        "softskill_list" : Skill.objects.all().filter(skill_category='softskill')
     }
     return render(request, "skill.html", context)
