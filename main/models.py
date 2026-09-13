@@ -15,12 +15,13 @@ class Experience(models.Model):
     
     # Atribut-atribut untuk data yang tergolong ke dalam Experience
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=255)
+    title = models.CharField(default="", max_length=255)
+    place = models.CharField(default="", max_length=225)
     description = models.TextField()
+    responsibilities_list = models.JSONField(default=list, blank=True)
     category = models.CharField(max_length=20, choices=EXPERIENCE_CHOICES, default='full-time')
-    thumbnail = models.URLField(blank=True, null=True)
-    started_at = models.DateTimeField(auto_now_add=True)
-    ended_at = models.DateTimeField(blank=True, null=True)
+    started_at = models.DateField(blank=True, null=True)
+    ended_at = models.DateField(blank=True, null=True)
 
     #
     def __str__(self):
