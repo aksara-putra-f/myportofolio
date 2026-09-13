@@ -60,3 +60,14 @@ class Project(models.Model):
     ext_link_provided = models.BooleanField()
     ext_link = models.URLField()
 
+
+class Skill(models.Model):
+    SKILL_CATEGORY = [
+        ('softskill', 'Softskill'),
+        ('hardskill', 'Hardskill')
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(null=False, blank=False)
+    short_desc = models.CharField(max_length=250, null=False, blank=True)
+    skill_category = models.CharField(choices=SKILL_CATEGORY)

@@ -39,3 +39,12 @@ def show_project(request):
     }
     return render(request, "project.html", context)
 
+
+def show_skill(request):
+    context = {
+        "name" : "Aksara Putra Fachruddin",
+        "hardskill_list" : Skill.objects.all().filter(skill_category='hardskill'),
+        "softskill_list" : Skill.objects.all().filter(skill_category='softskill')
+    }
+    return render(request, "skill.html", context)
+
