@@ -42,6 +42,9 @@
 - **Minggu, 13 September 2026**
     - Membuat aturan styling pada style.css untuk template page section Experience, Skill, Project, dan Education
 
+- **Senin, 14 September 2026**
+    - Mengubah tampilan pada index.html menjadi hanya menampilkan ringkasan/highlight dari fitur-fitur informasi pada section Education, Experience, Skill, dan Project.
+    - Membuat unit test
 
 # Log Penggunaan AI
 **Tanggal:** Sabtu, 5 September 2026
@@ -76,6 +79,33 @@
 
 **Link Percakapan**: https://gemini.google.com/share/d/1jAgRam8eJsaplcRsNyPfcF7OnN5vCxIQ?usp=sharing
 
+---
+
+**Tanggal:** 12 September 2026
+
+**Tool:** Claude
+
+**Masalah:** Bagaimana menampilkan atribut data pada model yang menggunakan field "ImageField" atau "FileField" pada template.
+
+**Strategi Prompting:** Saya menyatakan apa masalah yang saya hadapi, yaitu bagaimana menggunakan data model yang menggunakan atribut "ImageField" atau "FileField" untuk bisa ditampilkan ke user. Saya juga meminta AI untuk menjelaskan bagian-bagian kode yang diberikannya. Saya juga melakukan percakapan beruntun untuk menanyakan bagian yang belum saya pahami.
+
+**Keputusan dalam Menerima Jawaban AI:** Menerima sebagian besar kode yang diberikan AI. Ada bagian yang tidak saya implementasikan, yaitu pada bagian "urls.py". Baik implementasi saya maupun AI sama-sama harus menambahkan "urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)", tetapi AI memberikana conditional, yaitu ketika Setting.DEBUG, sedangkan saya tidak memberikan conditional.
+
+**Link Percakapan:** https://claude.ai/share/31f61328-176a-46ec-b7bd-dc3cc9369f49
+
+---
+
+**Tanggal:** 14 September 2026
+
+**Tool:** Claude
+
+**Masalah:** Mendeteksi letak kesalahan pada unit test dan meminta penjelasan dari AI terkait bagaimana membuat unit test untuk data model dengan field ImageField dan JSONField
+
+**Strategi Prompting:** Saya memberitahu AI tentang apa yang ingin saya ketahui, bagaimana membuat unit test untuk data model dengan field ImageField dan JSONField. Lalu, untuk proses debugging unit test, saya melakukannya pada prompt terpisah dari sebelumnya. Saya mengirimkan kode views.py, models.py, template, dan test.py serta pesan error terminal kepada AI, lalu saya meminta bantuan AI untuk mendeteksi kesalaha yang belum dapat saya lihat.
+
+**Keputusan dalam Menerima Jawaban AI:** AI mengatakan bahwa ternyata ada hal dari file lain yang pada akhirnya membuat test menjadi gagal, jadi kesalahan tidak hanya terletak pada test.py. Meskipun begitu, saya tidak membaca seluruh respons AI. Saya berhenti pada pertengahan hasil respons AI dan memutuskan untuk mencoba membaca pesan error yang ada di terminal untuk melihat letak error tersebut muncul.
+
+**Link percakapan:** https://claude.ai/share/31f61328-176a-46ec-b7bd-dc3cc9369f49
 
 # Refleksi Mandiri
 ### Tugas 1
@@ -85,3 +115,15 @@
 Tantangan-tantangan tersebut juga menjadi hal yang menjadi fokus utama saya ketika mengatur tampilan dari desktop ke mobile. Pengaturan seperti apa yang harus saya lakukan didasarkan pada seperti apa elemen-elemen pada suatu container ingin saya tampilkan jika berpindah dari tampilan desktop ke mobile. Selanjutnya, saya menentukan nilai display apa yang perlu saya gunakan, apakah tetap sama seperti sebelumnya atau harus diubah. Selanjutnya adalah permasalahan pengaturan ukuran (width dan height) dan posisi (padding, margin, justify-content, align-items, dan lain-lain)
 
 3. Batasan yang saya rasakan adalah efisiensi dalam memperbarui, menambahkan, atau menghapus konten pada salah satu section. Untuk melakukannya, saya harus melihat kembali file html saya. Jika file html sudah cukup panjang dan rumit, proses manajemen konten (menambah, mengubah, menghapus) bisa sulit karena saya harus mencari bagian yang mengatur konten tersebut. Dalam web portofolio saya, saya ingin menampilkan konten-konten yang relevan sehingga fokus keahlian saya bisa lebih tersampaikan. Misalnya, saya ingin menampilkan projek-projek yang relevan dan benar-benar menunjukkan keterlibatan saya, skill-skill yang relevan, dan experience yang relevan. Jika saya ingin mengubah isi dari konten-konten tersebut, saya harus menelurusi file html saya yang bisa saja file tersebut sudah cukup panjang dan kompleks sehingga akan sulit untuk menemukan bagian yang saya cari. Dengan web dinamis, harapannya web portofolio saya bisa secara dinamis mengatur konten-konten yang sesuai untuk ditampilkan dengan sedikit campur tangan saya.
+
+
+### Tugas 2
+1. Ketika user membuka halaman portofolio, user, melalui browser, akan mengirimkan request yang akan diterima oleh urls.py. Berdasarkan pada path yang ditunjukkan oleh URL request, urls.py akan memanggil function dari views.py yang sesuai. Function pada views.py yang dipanggil akan mengambil template, misalnya file html, yang di-render oleh function tersebut. Function tersebut juga dapat memberikan context dalam bentuk pasangan-pasangan key-value dengan value dapat di-set secara hardcoded atau diambil dari model class data yang telah diatur di Models.py. Template, beserta data yang dimasukkan ke template, akan dikirimkan dari views.py ke urls.py, lalu dikirimkan ke user melalui broswer.
+
+2. Mengelola data secara langsung pada template akan membuat pemeliharaan dan pengembangan aplikasi akan berjalan tidak efisien. Setiap kali ada penambahan, penghapusan, atau pembaruan data, file template harus dilakukan perubahan. Konsekuensi jika menggunakan pendekatan tersebut:
+- File template dapat menjadi sangat panjang
+- Redudansi kode (misalkan ada bagian yang berperan sebagai card dari item. Jika menggunakan pendekatan ini, bagian kode tersebut harus dibuat sebanyak data yang ada)
+- Kesulitan dalam menavigasi file template
+Pada model, kita membuat rancangan atribut-atribut data untuk suatu class model data. Data-data dari objek yang terbentuk dari suatu class model dapat digunakan oleh template menggunakan Django Template Tag setelah data-data tersebut dikirim oleh views.py melalui context. Pengelolaan data yang sebelumnya dilakukan langsung di template dapat dilakukan melalui Shell atau page admin yang telah disediakan Django.
+
+3. makemigrations berfungsi untuk menyiapkan perubahan pada model untuk dimigrasi ke database Django lokal, sedangkan migration berfungsi untuk mengaplikasikan perubahan pada model ke database Django lokal. Dengan kata lain, makemigrations hanya untuk menyiapkan perubahan pada model, tetapi hasil perubahannya belum terlihat. Agar perubahannya terlihat, langkah selanjutnya adalah migrate. Kita harus melakukan makemigrations dan migrate ketika kita melakukan perubahan pada model kita di models.py, seperti menambahkan atribut data baru, menghapus atribut data yang sudah ada, dan mengubah tipe field pada suatu atribut data model. 
