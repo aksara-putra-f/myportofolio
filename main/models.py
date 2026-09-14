@@ -22,7 +22,7 @@ class Experience(models.Model):
     category = models.CharField(max_length=20, choices=EXPERIENCE_CHOICES, default='full-time')
     started_at = models.DateField(blank=True, null=True)
     ended_at = models.DateField(blank=True, null=True)
-    highlite_experience = models.BooleanField(default=False)
+    highlight_experience = models.BooleanField(default=False)
 
     #
     def __str__(self):

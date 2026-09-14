@@ -112,7 +112,7 @@
                     {% for highlited_project in highlited_project_list %}
                     <div class="card project-card">
                         <p class="project-name">{{ highlited_project.project_name }}</p>
-                        <p class="project-type">{{ highlited_project.project_type }}</p>    
+                        <p class="project-type">{{ highlited_project.get_project_type_display }}</p>    
                         {% if highlited_project.media_type == 'image' %}
                             <img class="project-media" src="{{ highlited_project.media.url }}" alt="{{ project.name }}">
                         {% elif highlited_project.media_type == 'video' %}

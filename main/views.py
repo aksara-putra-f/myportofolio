@@ -13,8 +13,8 @@ def show_main(request):
             "Throughout my academic years, I've seeking opportunities to learn, grow, and collaborate through personal and team projects, organization, competition, courses, and the technology community."
         ),
         "recent_education" : Education.objects.order_by('year_start').reverse().first(),
-        "highlight_experience_list" : Experience.objects.all().filter(highlite_experience = True),
-        "highlight_experience_count" : Experience.objects.all().filter(highlite_experience = True).count(),
+        "highlight_experience_list" : Experience.objects.all().filter(highlight_experience = True),
+        "highlight_experience_count" : Experience.objects.all().filter(highlight_experience = True).count(),
         "highlited_project_list" : Project.objects.all().filter(highlight_project = True),
         "highlited_skill_list" : Skill.objects.all().filter(highlight_skill = True)
     }
