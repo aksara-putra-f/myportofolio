@@ -34,9 +34,9 @@
                         <h2 class="skill-category-title">Hardskill</h2>
                         <div class="skill-grid" id="hardskill">
                             {% for hardskill in hardskill_list %}
-                                <article class="card skill-card">
+                                <article class="tooltip card skill-card">
                                     <p class="skill-name">{{ hardskill.name }}</p>
-                                    <p class="skill-desc">{{ hardskill.short_desc }}</p>
+                                    <p class="tooltip-info skill-desc">{{ hardskill.short_desc }}</p>
                                 </article>
                             {% empty %}
                                 <p class="empty-state">
@@ -49,9 +49,9 @@
                         <h2 class="skill-category-title">Softskill</h2>
                         <div class="skill-grid" id="softskill">
                             {% for softskill in softskill_list %}
-                                <article class="card skill-card">
+                                <article class="tooltip card skill-card">
                                     <p class="skill-name">{{ softskill.name }}</p>
-                                    <p class="skill-desc">{{ softskill.short_desc }}</p>
+                                    <p class="tooltip-info skill-desc">{{ softskill.short_desc }}</p>
                                 </article>
                             {% empty %}
                                 <p class="empty-state">

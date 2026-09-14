@@ -22,6 +22,7 @@ class Experience(models.Model):
     category = models.CharField(max_length=20, choices=EXPERIENCE_CHOICES, default='full-time')
     started_at = models.DateField(blank=True, null=True)
     ended_at = models.DateField(blank=True, null=True)
+    highlite_experience = models.BooleanField(default=False)
 
     #
     def __str__(self):
@@ -52,13 +53,24 @@ class Project(models.Model):
         ('video', 'Video')
     ]
 
+    PROJECT_TYPE = [
+        ('game project', "Game Project"),
+        ('ai project', "AI Project"),
+        ('web project', "Web Project"),
+    ]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     project_name = models.CharField(max_length=250, null=False, blank=False)
+    project_type = models.CharField(choices=PROJECT_TYPE, default='game project')
     project_desc = models.TextField()
     media = models.FileField(upload_to="project-media/", default="no_image_square.png", blank=False, null=True)
     media_type = models.CharField(blank=False, choices=MEDIA_TYPE, default='image')
     ext_link_provided = models.BooleanField()
     ext_link = models.URLField()
+    highlight_project = models.BooleanField(default=False, blank=False)
+
+    def __str__(self):
+        return self.project_name
 
 
 class Skill(models.Model):
@@ -71,3 +83,7 @@ class Skill(models.Model):
     name = models.CharField(null=False, blank=False)
     short_desc = models.CharField(max_length=250, null=False, blank=True)
     skill_category = models.CharField(choices=SKILL_CATEGORY)
+    highlight_skill = models.BooleanField(default=False, blank=False)
+
+    def __str__(self):
+        return self.name

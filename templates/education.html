@@ -32,9 +32,7 @@
                 <div class="section-container" id="education-container">
                     {% for education in education_list %}
                         <article class="education-card">
-                            <div>
-                                <img class="institution-logo" src="{{ education.institution_logo.url }}" alt="education.name">
-                            </div>
+                            <img class="institution-logo" src="{{ education.institution_logo.url }}" alt="education.name">
                             <div class="education-info">
                                 <p class="education-desc">
                                     <span class="institution">{{ education.institution_name }}</span><br>
