@@ -40,11 +40,15 @@ class Education(models.Model):
     year_end = models.CharField(default="Present", max_length=7, null=False, blank=False)
     institution_name = models.CharField(max_length=250, null=False, blank=False)
     major = models.CharField(default="", max_length=250, null=False, blank=True)
-    activities = models.JSONField(default=list, null=False, blank=True)
+    activities = models.TextField(default="", blank=True)
     institution_logo = models.ImageField(default="no_image_square.png", upload_to='institution_logo/', blank=False)
 
     def __str__(self):
         return self.institution_name
+
+    @property
+    def activity_list(self):
+        return [activity.strip() for activity in self.activities.split(",")]
 
 
 class Project(models.Model):
