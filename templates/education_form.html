@@ -3,12 +3,13 @@
     <title>Add Project - {{ name }}</title>
 {% endblock meta %}
 {% block content %}
-    <main>
-        <section class="education-section">
+    <main class="form-page">
+        <section class="education-form-page">
             <div class="container">
                 <h1>Add New Education</h1>
                 <form method="post"
                       action="{% url 'main:create_education' %}"
+                      enctype="multipart/form-data"
                       class="education-form">
                     {% csrf_token %}
                     {% for field in form %}

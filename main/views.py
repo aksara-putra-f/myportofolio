@@ -69,7 +69,7 @@ def show_education(request):
 
 
 def create_education(request):
-    form = EducationForm(request.POST or None)
+    form = EducationForm(request.POST or None, request.FILES or None)
 
     if request.method == "POST" and form.is_valid():
         form.save()

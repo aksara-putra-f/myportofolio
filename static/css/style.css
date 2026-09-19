@@ -255,6 +255,13 @@ h1, .brand {
 }
 
 /* --------------------------------------- */
+/* Mengatur aturan styling untuk form page */
+/* --------------------------------------- */
+.form-page {
+    padding: 2rem 0rem;
+}
+
+/* --------------------------------------- */
 /* Mengatur aturan styling untuk main page */
 /* --------------------------------------- */
 .main-page .container {
