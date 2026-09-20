@@ -25,6 +25,9 @@ def show_main(request):
     return render(request, "index.html", context)
 
 
+# ---------- #
+# Experience #
+# ---------- #
 def show_experience(request):
     context = {
         "name": "Aksara Putra Fachruddin",
@@ -33,6 +36,9 @@ def show_experience(request):
     return render(request, "experience.html", context)
 
 
+# --------- #
+#  project  #
+# --------- #
 def show_project(request):
     context = {
         "name" : "Aksara Putra Fachruddin",
@@ -41,6 +47,9 @@ def show_project(request):
     return render(request, "project.html", context)
 
 
+# --------- #
+#   skill   #
+# --------- #
 def show_skill(request):
     context = {
         "name" : "Aksara Putra Fachruddin",
@@ -50,6 +59,9 @@ def show_skill(request):
     return render(request, "skill.html", context)
 
 
+# --------- #
+# Education #
+# --------- #
 def show_education(request):
     json_response = get_education_json(request)
 
@@ -80,15 +92,15 @@ def create_education(request):
         "name": "Aksara Putra Fachruddin",
         "form": form,
     }
-    return render(request, "education_form.html", context)
+    return render(request, "form-templates/education_form.html", context)
 
 
 def get_education_json(request):
-    title_query = request.GET.get("title", "").strip()
+    institution_name_query = request.GET.get("institution_name", "").strip()
     educations = Education.objects.all()
 
-    if title_query:
-        educations = educations.filter(title__icontains=title_query)
+    if institution_name_query:
+        educations = educations.filter(institution_name=institution_name_query)
 
     education_json = serializers.serialize("json", educations)
     return HttpResponse(education_json, content_type="application/json")

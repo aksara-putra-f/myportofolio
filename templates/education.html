@@ -7,22 +7,22 @@
         <section id="education-section-page">
             <div class="container">
                 <p class="section-kicker">My Education Background</p>
-                <div class="education-header">
+                <div class="section-header education-header">
                     <h1>Education</h1>
                     <a href="{% url 'main:create_education' %}"
-                       class="button education-add-button">
+                       class="button add-button education-add-button">
                         <span aria-hidden="true">+</span>
                         Add Education
                     </a>
                 </div>
                 <form method="get"
                       action="{% url 'main:show_education' %}"
-                      class="education-search">
+                      class="search-bar education-search-bar">
                     <input type="search"
                            name="institution_name"
                            value="{{ institution_name_query }}"
                            placeholder="Search based on the institution name"
-                           class="education-search__input"
+                           class="search_input"
                            aria-label="Search based on the institution name">
                     <button type="submit" class="button">Search</button>
                 </form>
