@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.core import serializers
 from django.http import HttpResponse
-from main.forms import EducationForm
+from main.forms import EducationForm, SkillForm
 from main.models import *
 
 # Create your views here.
@@ -41,14 +41,9 @@ def show_project(request):
     return render(request, "project.html", context)
 
 
-def show_skill(request):
-    context = {
-        "name" : "Aksara Putra Fachruddin",
-        "hardskill_list" : Skill.objects.all().filter(skill_category='hardskill'),
-        "softskill_list" : Skill.objects.all().filter(skill_category='softskill')
-    }
-    return render(request, "skill.html", context)
-
+# --------- #
+# Education 
+# --------- #
 
 def show_education(request):
     json_response = get_education_json(request)
@@ -103,3 +98,67 @@ def delete_education(request, education_id):
         return redirect("main:show_education")
 
     return redirect("main:show_education")
+
+
+# --------- #
+#   Skill 
+# --------- #
+def show_skill(request):
+    json_response = get_skill_json(request)
+    
+    skills = serializers.deserialize(
+        "json",
+        json_response.content.decode("utf-8"),
+    )
+    skills = [skill.object for skill in skills]
+    hardskill_list = [skill for skill in skills if skill.skill_category=='hardskill']
+    softskill_list = [skill for skill in skills if skill.skill_category=='softskill']
+    skill_name_query = request.GET.get("skill_name", "").strip()
+
+    context = {
+        "name": "Aksara Putra Fachruddin",
+        "skill_list": skills,
+        "hardskill_list" : hardskill_list,
+        "softskill_list" : softskill_list,
+        "skill_name_query": skill_name_query,
+    }
+    return render(request, "skill.html", context)
+
+
+
+def create_skill(request):
+    form = SkillForm(request.POST or None)
+
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, "Skill has been added successfully!")
+        return redirect("main:show_skill")
+
+    context = {
+        "name": "Aksara Putra Fachruddin",
+        "form": form
+    }
+
+    return render(request, "form-templates/skill_form.html", context)
+
+
+def get_skill_json(request):
+    skill_name_query = request.GET.get("skill_name", "").strip()
+    skills = Skill.objects.all()
+
+    if skill_name_query:
+        skills = skills.filter(name__icontains=skill_name_query)
+
+    skill_json = serializers.serialize("json", skills)
+    return HttpResponse(skill_json, content_type="application/json")
+
+
+def delete_skill(request, skill_id):
+    skill = get_object_or_404(Skill, pk=skill_id)
+
+    if request.method == "POST":
+        skill.delete()
+        messages.success(request, "The Skill item has been deleted successfully!")
+        return redirect("main:show_skill")
+
+    return redirect("main:show_skill")

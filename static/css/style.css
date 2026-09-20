@@ -521,7 +521,7 @@ h1, .brand {
     font-weight: 600;
 }
 
-.education-header {
+.section-header {
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -530,28 +530,28 @@ h1, .brand {
     margin-bottom: 1.5rem;
 }
 
-.education-header h1 {
+.section-header h1 {
     margin-bottom: 0;
 }
 
-.education-add-button {
+.add-button {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
 }
 
-.education-add-button span {
+.add-button span {
     font-size: 1.25rem;
     line-height: 1;
 }
 
-.education-search {
+.search-bar {
     display: flex;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
 }
 
-.education-search__input {
+.search__input {
     width: 100%;
     min-width: 0;
     padding: 0.7rem;
@@ -562,7 +562,7 @@ h1, .brand {
     font: inherit;
 }
 
-.education-search__input:focus {
+.search__input:focus {
     outline: 2px solid var(--accent);
     border-color: var(--accent);
 }
@@ -855,6 +855,14 @@ h1, .brand {
 .form-group textarea:focus {
     outline: 2px solid var(--accent);
     border-color: var(--accent);
+}
+
+.form-group input[type="checkbox"],
+.form-group input[type="radio"] {
+    width: auto;
+    display: block;
+    margin: 0;
+    accent-color: var(--accent);
 }
 
 .form-error {

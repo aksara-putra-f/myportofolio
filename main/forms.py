@@ -1,5 +1,5 @@
-from django.forms import ModelForm, TextInput, Textarea, FileInput
-from main.models import Education
+from django.forms import ModelForm, TextInput, Textarea, FileInput, Select, CheckboxInput
+from main.models import Education, Skill
 
 class EducationForm(ModelForm):
     class Meta:
@@ -57,3 +57,49 @@ class EducationForm(ModelForm):
                 {"accept": ".png,.jpg,.jpeg"}
             )
         }
+
+
+class SkillForm(ModelForm):
+    class Meta:
+        model = Skill
+
+        fields = [
+            "name",
+            "short_desc",
+            "skill_category",
+            "highlight_skill"
+        ]
+
+        labels = {
+            "name" : "Skill Name",
+            "short_decs" : "Skill Short Description",
+            "skill_category" : "Skill Category",
+            "highlight_skill" : "Show Skill on Front Page"
+        }
+
+        widgets = {
+            "name" : TextInput(
+                attrs={
+                    "placeholder": "Name of the skill",
+                    "maxlength": 255,
+                }
+            ),
+
+            "short_desc" : Textarea(
+                attrs={
+                    "placeholder": "Short description about the skill",
+                    "rows": 2
+                }
+            ),
+
+            "skill_category" : Select(
+                attrs={
+                    "choices": [
+                        ('softskill', 'Softskill'),
+                        ('hardskill', 'Hardskill')
+                    ]
+                }
+            ),
+
+            "highlight_skill" : CheckboxInput()
+    }
