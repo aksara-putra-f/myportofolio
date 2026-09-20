@@ -18,7 +18,7 @@ class Experience(models.Model):
     title = models.CharField(default="", max_length=255)
     place = models.CharField(default="", max_length=225)
     description = models.TextField()
-    responsibilities_list = models.JSONField(default=list, blank=True)
+    responsibilities_list = models.TextField(blank=False)
     category = models.CharField(max_length=20, choices=EXPERIENCE_CHOICES, default='full-time')
     started_at = models.DateField(blank=True, null=True)
     ended_at = models.DateField(blank=True, null=True)
@@ -32,6 +32,10 @@ class Experience(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+
+    @property
+    def reponsiblity_list(self):
+        return [responsiblity.strip() for responsiblity in self.responsibilities_list.split(",")]
 
 
 class Education(models.Model):
