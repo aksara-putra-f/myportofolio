@@ -1,5 +1,5 @@
 from django.forms import ModelForm, TextInput, Textarea, FileInput, Select, DateInput, CheckboxInput, URLInput
-from main.models import Education, Experience, Project
+from main.models import Education, Experience, Project, Skill
 
 class EducationForm(ModelForm):
     class Meta:
@@ -188,3 +188,49 @@ class ProjectForm(ModelForm):
 
             "ext_link" : URLInput()
         }
+
+
+class SkillForm(ModelForm):
+    class Meta:
+        model = Skill
+
+        fields = [
+            "name",
+            "short_desc",
+            "skill_category",
+            "highlight_skill"
+        ]
+
+        labels = {
+            "name" : "Skill Name",
+            "short_decs" : "Skill Short Description",
+            "skill_category" : "Skill Category",
+            "highlight_skill" : "Show Skill on Front Page"
+        }
+
+        widgets = {
+            "name" : TextInput(
+                attrs={
+                    "placeholder": "Name of the skill",
+                    "maxlength": 255,
+                }
+            ),
+
+            "short_desc" : Textarea(
+                attrs={
+                    "placeholder": "Short description about the skill",
+                    "rows": 2
+                }
+            ),
+
+            "skill_category" : Select(
+                attrs={
+                    "choices": [
+                        ('softskill', 'Softskill'),
+                        ('hardskill', 'Hardskill')
+                    ]
+                }
+            ),
+
+            "highlight_skill" : CheckboxInput()
+    }

@@ -575,7 +575,7 @@ h1, .brand {
     text-align: center;
 }
 
-.search_input:focus {
+.search__input:focus {
     outline: 2px solid var(--accent);
     border-color: var(--accent);
 }
@@ -902,6 +902,7 @@ h1, .brand {
 .form-group input[type="checkbox"],
 .form-group input[type="radio"] {
     width: auto;
+    display: block;
     margin: 0;
     accent-color: var(--accent);
 }

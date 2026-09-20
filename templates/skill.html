@@ -1,13 +1,42 @@
 {% extends 'base.html' %}
-
+{% block meta %}
+    <title>Skill - {{ name }}</title>
+{% endblock meta %}
 {% block content %}
     <main class="section-page">
         <section class="skill-section" id="skill">
             <div class="container">
                 <p class="section-kicker">Skills I have</p>
-                <h1>Skill</h1>
-
+                <div class="section-header skill-header">
+                    <h1>Skill</h1>
+                    <a href="{% url 'main:create_skill' %}"
+                       class="button add-button skill-add-button">
+                       <span aria-hidden="true">+</span>
+                       Add Skill
+                    </a>
+                </div>
+                <form method="get"
+                      action="{% url 'main:show_skill' %}"
+                      class="search-bar skill-search-bar">
+                      <input type="search"
+                             name="skill_name"
+                             value="{{ skill_name_query }}"
+                             placeholder="Search based on the skill name"
+                             class="search__input"
+                             aria-label="Search based on the skill name">
+                      <button type="submit" class="button">Search</button>
+                </form>
                 <div class="section-container" id="skill-container">
+                    {% if skill_name_query %}
+                    <div class="search-result-container" id="skill-search-result-container">
+                        {% for skill in skill_list %}
+                            <p class="skill-name">{{ skill.name }}</p>
+                            <p class="skill-desc">{{ skill.short_desc }}</p>
+                            {% empty %}
+                            <p class="item-no-found">No '{{ skill_name_query }}' item has been found.</p>
+                        {% endfor %}
+                    </div>
+                    {% else %}
                     <div id="hardskill-container">
                         <h2 class="skill-category-title">Hardskill</h2>
                         <div class="skill-grid" id="hardskill">
@@ -38,6 +67,7 @@
                             {% endfor %}
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </section>

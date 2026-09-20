@@ -19,7 +19,10 @@ urlpatterns = [
     path("project/<uuid:project_id>/delete/", delete_project, name="delete_project"),
 
     path("skill/", show_skill, name="show_skill"),
-
+    path("skill/add/", create_skill, name="create_skill"),
+    path("api/skills/", get_skill_json, name="get_skill_json"),
+    path("skill/<uuid:skill_id>/delete/", delete_skill, name="delete_skill"),
+    
     path("education/", show_education, name="show_education"),
     path("education/add/", create_education, name="create_education"),
     path("api/educations/", get_education_json, name="get_education_json"),
