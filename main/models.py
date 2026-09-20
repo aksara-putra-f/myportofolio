@@ -65,13 +65,13 @@ class Project(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     project_name = models.CharField(max_length=250, null=False, blank=False)
-    project_type = models.CharField(choices=PROJECT_TYPE, default='game project')
     project_desc = models.TextField()
+    project_type = models.CharField(choices=PROJECT_TYPE, default='game project')
     media = models.FileField(upload_to="project-media/", default="no_image_square.png", blank=False, null=True)
     media_type = models.CharField(blank=False, choices=MEDIA_TYPE, default='image')
-    ext_link_provided = models.BooleanField()
-    ext_link = models.URLField()
     highlight_project = models.BooleanField(default=False, blank=False)
+    ext_link_provided = models.BooleanField()
+    ext_link = models.URLField(blank=True)
 
     def __str__(self):
         return self.project_name

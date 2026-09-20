@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.core import serializers
 from django.http import HttpResponse
-from main.forms import EducationForm
+from main.forms import EducationForm, ProjectForm
 from main.models import *
 
 # Create your views here.
@@ -24,7 +24,9 @@ def show_main(request):
     }
     return render(request, "index.html", context)
 
-
+# ---------- #
+# Experience #
+# ---------- #
 def show_experience(request):
     context = {
         "name": "Aksara Putra Fachruddin",
@@ -33,14 +35,67 @@ def show_experience(request):
     return render(request, "experience.html", context)
 
 
+# --------- #
+#  project  #
+# --------- #
 def show_project(request):
+    json_response = get_project_json(request)
+
+    projects = serializers.deserialize("json", json_response.content.decode("utf-8"))
+    projects = [project.object for project in projects]
+    project_type_query = request.GET.get("project_type", "").strip()
+
     context = {
         "name" : "Aksara Putra Fachruddin",
-        "project_list" : Project.objects.all()
+        "project_list" : projects,
+        "project_type_query" : project_type_query,
+        "project_types": Project.PROJECT_TYPE
     }
     return render(request, "project.html", context)
 
 
+def create_project(request):
+    form = ProjectForm(request.POST or None, request.FILES or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "The Project Item Has Been Added Successfully!")
+        return redirect("main:show_project")
+
+    context = {
+        "name": "Aksara Putra Fachruddin",
+        "form": form
+    }
+
+    return render(request, "form-templates/project_form.html", context)
+
+
+def get_project_json(request):
+    project_type_query = request.GET.get("project_type","").strip()
+    projects = Project.objects.all()
+
+    if project_type_query:
+        projects = projects.filter(project_type = project_type_query)
+
+    projects_json = serializers.serialize("json", projects)
+    return HttpResponse(projects_json, content_type="application/json")
+
+
+def delete_project(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    
+    if request.method == "POST":
+        project.delete()
+        messages.success(request, "The Project item has been deleted successfully!")
+        return redirect("main:show_project")
+
+    return redirect("main:show_project")
+
+
+
+# --------- #
+#   skill   #
+# --------- #
 def show_skill(request):
     context = {
         "name" : "Aksara Putra Fachruddin",
@@ -50,6 +105,10 @@ def show_skill(request):
     return render(request, "skill.html", context)
 
 
+
+# --------- #
+# Education #
+# --------- #
 def show_education(request):
     json_response = get_education_json(request)
 
