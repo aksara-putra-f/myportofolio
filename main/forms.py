@@ -1,5 +1,5 @@
-from django.forms import ModelForm, TextInput, Textarea, FileInput
-from main.models import Education
+from django.forms import ModelForm, TextInput, Textarea, FileInput, Select, DateInput, CheckboxInput
+from main.models import Education, Experience
 
 class EducationForm(ModelForm):
     class Meta:
@@ -56,4 +56,77 @@ class EducationForm(ModelForm):
             "institution_logo": FileInput(
                 {"accept": ".png,.jpg,.jpeg"}
             )
+        }
+
+
+class ExperienceForm(ModelForm):
+    class Meta:
+        model = Experience
+
+        fields = [
+            "title",
+            "place",
+            "description",
+            "responsibilities_list",
+            "category",
+            "started_at",
+            "ended_at",
+            "highlight_experience"
+        ]
+
+        labels = {
+            "title" : "Position Held",
+            "place" : "Place/Organization/Committee",
+            "description" : "Description of the Position",
+            "responsibilities_list" : "Responsibilites of the Position",
+            "category" : "Category of the Experience",
+            "started_at" : "Date Started",
+            "ended_at" : "Date Ended",
+            "highlight_experience" : "Show Experience on Front Page"
+        }
+
+        widgets = {
+            "title" : TextInput(
+                attrs={
+                    "placeholder" : "Position held during the experience",
+                    "maxlength" : 225
+                }
+            ),
+
+            "place" : TextInput(
+                attrs={
+                    "placeholder" : "The place where the position is held (organization/committee/place/etc.)",
+                    "maxlength" : 225
+                }
+            ),
+
+            "description" : Textarea(
+                attrs={
+                    "placeholder" : "Tell the Role's overall job, what's the place where the position is held is about, etc.",
+                    "rows" : 4
+                }
+            ),
+
+            "responsibilities_list" : Textarea(
+                attrs={
+                    "placeholder" : "Responsibilities of the role. Format: item_1, item_2, ...",
+                    "rows" : 4
+                }
+            ),
+
+            "category" : Select(),
+
+            "started_at" : DateInput(
+                attrs={
+                    "type": "date"
+                }
+            ),
+
+            "ended_at" : DateInput(
+                attrs={
+                    "type": "date"
+                }
+            ),
+
+            "highlight_experience" : CheckboxInput()
         }

@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.core import serializers
 from django.http import HttpResponse
-from main.forms import EducationForm
+from main.forms import EducationForm, ExperienceForm
 from main.models import *
 
 # Create your views here.
@@ -29,11 +29,66 @@ def show_main(request):
 # Experience #
 # ---------- #
 def show_experience(request):
+    json_response = get_experience_json(request)
+
+    experiences = serializers.deserialize("json", json_response.content.decode("utf-8"))
+    experiences = [experience.object for experience in experiences]
+    experience_category = Experience.EXPERIENCE_CHOICES
+    on_going_query = request.GET.get("on_going", "").strip()
+    experience_category_query = request.GET.get("experience_category", "").strip()
+
     context = {
         "name": "Aksara Putra Fachruddin",
         "experience_list": Experience.objects.all(),
+        "experience_category": Experience.EXPERIENCE_CHOICES,
+        "on_going_query": on_going_query,
+        "experience_category": experience_category_query,
+        "experience_category": experience_category
     }
     return render(request, "experience.html", context)
+
+
+def create_experience(request):
+    form = ExperienceForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Experience Data Has Been Added Successfully!")
+        return redirect("main:show_experience")
+
+    context = {
+        "name": "Aksara Putra Fachruddin",
+        "form": form,
+    }
+    return render(request, "form-templates/experience_form.html", context)
+
+
+def get_experience_json(request):
+    on_going_query = request.GET.get("on_going", "").strip()
+    experience_category_query = request.GET.get("experience_category", "").strip()
+    experiences = Experience.objects.all()
+
+    if on_going_query:
+        if on_going_query.lower() == "on going":
+            experiences = experiences.filter(ended_at__isnull = True)
+        elif on_going_query.lower() == "finished":
+            experiences = experiences.filter(ended_at__isnull = False)
+    elif experience_category_query:
+        experiences = experiences.filter(category = experience_category_query)
+
+    experience_json = serializers.serialize("json", experiences)
+    return HttpResponse(experience_json, content_type="application/json")
+
+
+def delete_experience(request, experience_id):
+    experience = get_object_or_404(Education, pk=experience_id)
+
+    if request.method == "POST":
+        experience.delete()
+        messages.success(request, "The Experience data has been deleted successfully!")
+        return redirect("main:show_experience")
+
+    return redirect("main:show_experience")
 
 
 # --------- #

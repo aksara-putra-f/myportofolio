@@ -5,8 +5,61 @@
         <section id="experience-section-page">
             <div class="container">
                 <p class="section-kicker">My Experience So Far</p>
-                <h1>Experience</h1>
+                <div class="section-header project-header">
+                    <h1>Experience</h1>
+                    <a href="{% url 'main:create_experience' %}"
+                       class="button add-button experience-add-button">
+                       <span aria-hidden="true">+</span>
+                       Add Experience
+                    </a>
+                </div>
+                <form method="get"
+                      action="{% url 'main:show_experience' %}"
+                      class="search-bar experience-search-bar">
+                      <select 
+                        class="experience-search-criteria">
+                        <option value="" disabled>Select the Search Criteria</option>
+                        <option value="category" selected>Experience Category</option>
+                        <option value="progress">Experience Progress</option>
+                      </select>
+                      
+                      <select 
+                        name="on_going"
+                        class="experience-progress-criteria">
+                        <option value="" disabled>Search based on the experience progress</option>
+                        {% if on_going_query == "" %}
+                            <option value="" selected>Show All Experience</option>
+                        {% else %}
+                            <option value="">Show All Experience</option>
+                        {% endif %}
 
+                        <option value="" selected>Empty Choice</option>
+                        <option value="on going">On Going</option>
+                        <option value="finished">Finished</option>
+                      </select>
+
+                      <select 
+                        name="experience_category"
+                        class="experience-category-criteria">
+                        <option value="" disabled>Search based on the Experience Category</option>
+                        {% if experience_category_query == "" %}
+                            <option value="" selected>Show All Experience</option>
+                        {% else %}
+                            <option value="">Show All Experience</option>
+                        {% endif %}
+
+                        <option value="" selected>Empty Choice</option>
+                        {% for value,label in experience_category %}
+                            {% if value == experience_category_query %}
+                                <option value="{{ value }}" selected>{{ label }}</option>
+                            {% else %}
+                                <option value="{{ value }}">{{ label }}</option>
+                            {% endif %}
+                        {% endfor %}
+                      </select>
+
+                      <button type="submit" class="button">Search</button>
+                </form>
                 <div class="section-container" id="experience-container">
                     {% for experience in experience_list %}
                         <article class="card experience-card">
@@ -35,7 +88,7 @@
                                 </p>
                                 <p>Responsibilities:<br></p>
                                 <ul>
-                                    {% for item in experience.responsibilities_list %}
+                                    {% for item in experience.reponsiblity_list %}
                                         <li>{{ item }}</li>
                                     {% endfor %}
                                 </ul>
