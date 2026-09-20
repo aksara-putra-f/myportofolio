@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block meta %}
+    <title>Add Project - {{ name }}</title>
+{% endblock meta %}
+{% block content %}
+    <main class="form-page">
+        <section class="project-form-page">
+            <div class="container">
+                <h1>Add New Project</h1>
+                <form method="post"
+                      action="{% url 'main:create_project' %}"
+                      enctype="multipart/form-data"
+                      class="project-form">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        {% if field.field.widget.input_type == "checkbox" %}
+                            <div class="form-group checkbox-group">
+                                {{ field }}
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {% for error in field.errors %}
+                                    <p class="form-error">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% for error in field.errors %}
+                                    <p class="form-error">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    <button type="submit" class="button">Add Project</button>
+                    <a href="{% url 'main:show_project' %}" class="button button-secondary">Cancel</a>
+                </form>
+            </div>
+        </section>
+    </main>
+{% endblock content %}

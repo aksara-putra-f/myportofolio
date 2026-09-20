@@ -560,6 +560,7 @@ h1, .brand {
     background: #fff;
     color: var(--ink);
     font: inherit;
+    text-align: center;
 }
 
 .search-bar select {
@@ -571,6 +572,7 @@ h1, .brand {
     background: #fff;
     color: var(--ink);
     font: inherit;
+    text-align: center;
 }
 
 .search_input:focus {
