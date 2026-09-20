@@ -46,6 +46,9 @@
     - Mengubah tampilan pada index.html menjadi hanya menampilkan ringkasan/highlight dari fitur-fitur informasi pada section Education, Experience, Skill, dan Project.
     - Membuat unit test
 
+- **Minggu, 20 September 2026**
+    - Membuat form untuk menambahkan data baru dan menambahkan fitur search data untuk setiap page section (Education, Skill, Project, dan Experience)
+
 # Log Penggunaan AI
 **Tanggal:** Sabtu, 5 September 2026
 
