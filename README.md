@@ -49,6 +49,9 @@
 - **Minggu, 20 September 2026**
     - Membuat form untuk menambahkan data baru dan menambahkan fitur search data untuk setiap page section (Education, Skill, Project, dan Experience)
 
+- **Senin, 21 September 2026**
+    - Membuat fitur data deletion untuk data Education, Skill, Project, dan Experience
+
 # Log Penggunaan AI
 **Tanggal:** Sabtu, 5 September 2026
 
@@ -130,3 +133,10 @@ Tantangan-tantangan tersebut juga menjadi hal yang menjadi fokus utama saya keti
 Pada model, kita membuat rancangan atribut-atribut data untuk suatu class model data. Data-data dari objek yang terbentuk dari suatu class model dapat digunakan oleh template menggunakan Django Template Tag setelah data-data tersebut dikirim oleh views.py melalui context. Pengelolaan data yang sebelumnya dilakukan langsung di template dapat dilakukan melalui Shell atau page admin yang telah disediakan Django.
 
 3. makemigrations berfungsi untuk menyiapkan perubahan pada model untuk dimigrasi ke database Django lokal, sedangkan migration berfungsi untuk mengaplikasikan perubahan pada model ke database Django lokal. Dengan kata lain, makemigrations hanya untuk menyiapkan perubahan pada model, tetapi hasil perubahannya belum terlihat. Agar perubahannya terlihat, langkah selanjutnya adalah migrate. Kita harus melakukan makemigrations dan migrate ketika kita melakukan perubahan pada model kita di models.py, seperti menambahkan atribut data baru, menghapus atribut data yang sudah ada, dan mengubah tipe field pada suatu atribut data model. 
+
+### Tugas 3
+1. ModelForm adalah kelas form yang disediakan oleh Django untuk secara otomatis membuat form untuk data berdasarkan tipe field yang didefinisikan pada class Model data tersebut. Jadi, alih-alih kita membuat struktur html form secara mandiri untuk field data kita, kita bisa memanfaatkan ModelForm dari Django untuk secara otomatis membuat struktur html form berdasarkan field data tersebut. Ketika kita membuat form menggunakan ModelForm Django, kita harus menambahkan {% csrf_token %} pada template html. Tujuannya untuk mencegah penyerang aplikasi mengubah request yang awalnya ke server Django kalian menjadi ke suatu API yang berbahaya dan mengirimkan data request kalian ke mereka. 
+
+2. JSON lebih disukai karena ukurannya yang lebih ringkas, parser yang sangat cepat, dan integrasi yang sangat natural dengan JavaScript di sisi frontend.
+
+3. Ketika ada request URL untuk mendapatkan data dalam bentuk JSON, maka fungsi terkait pada views.py akan dijalankan. Fungsi tersebut akan mengambil data dari database, lalu mengembalikan data yang sudah dibungkus dalam format JSON ke client (atau fungsi views lainnya yang meminta). Data yang diambil dari database sebelumnya akan di-serialize sebelum dikirimkan. Tujuannya adalah untuk mengubah data yang masih dalam format kompleks, misalnya masih dalam objek model Django, menjadi format JSON yang lebih mudah untuk dipahami dan disimpan.
