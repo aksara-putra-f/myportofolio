@@ -65,7 +65,6 @@ def create_experience(request):
 
 def get_experience_json(request):
     on_going_query = request.GET.get("on_going", "").strip()
-    experience_category_query = request.GET.get("experience_category", "").strip()
     experiences = Experience.objects.all()
 
     if on_going_query:
@@ -73,8 +72,6 @@ def get_experience_json(request):
             experiences = experiences.filter(ended_at__isnull = True)
         elif on_going_query.lower() == "finished":
             experiences = experiences.filter(ended_at__isnull = False)
-    elif experience_category_query:
-        experiences = experiences.filter(category = experience_category_query)
 
     experience_json = serializers.serialize("json", experiences)
     return HttpResponse(experience_json, content_type="application/json")

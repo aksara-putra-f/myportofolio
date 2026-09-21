@@ -581,7 +581,7 @@ h1, .brand {
     text-align: center;
 }
 
-.search__input:focus {
+.search_input:focus {
     outline: 2px solid var(--accent);
     border-color: var(--accent);
 }
@@ -589,19 +589,6 @@ h1, .brand {
 .search-bar select:focus {
     outline: 2px solid var(--accent);
     border-color: var(--accent);
-}
-
-.search-bar .experience-progress-criteria,
-.search-bar .experience-category-criteria {
-    display: none;
-}
-
-.search-bar .experience-search-criteria:has(option[value="category"]:checked) ~ .experience-category-criteria {
-    display: inline;
-}
-
-.search-bar .experience-search-criteria:has(option[value="progress"]:checked) ~ .experience-progress-criteria {
-    display: inline;
 }
 
 .hide {
