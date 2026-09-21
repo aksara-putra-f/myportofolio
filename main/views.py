@@ -161,6 +161,22 @@ def delete_project(request, project_id):
     return redirect("main:show_project")
 
 
+def project_delete_page(request):
+    json_response = get_project_json(request)
+    
+    projects = serializers.deserialize(
+        "json",
+        json_response.content.decode("utf-8"),
+    )
+    projects = [project.object for project in projects]
+
+    context = {
+    "name": "Aksara Putra Fachruddin",
+    "project_list": projects,
+    }
+    return render(request, "delete-templates/project_delete.html", context)
+
+
 # --------- #
 # Education #
 # --------- #
