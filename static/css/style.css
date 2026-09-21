@@ -534,6 +534,12 @@ h1, .brand {
     margin-bottom: 0;
 }
 
+.section-header-action {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
 .add-button {
     display: inline-flex;
     align-items: center;
@@ -600,82 +606,6 @@ h1, .brand {
 
 .hide {
     display: none !important;
-}
-
-.education-delete-modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    max-height: none;
-    margin: 0;
-    padding: 1rem;
-    border: 0;
-    background: transparent;
-    z-index: 10;
-    align-items: center;
-    justify-content: center;
-}
-
-.education-delete-modal:popover-open {
-    display: flex;
-}
-
-.education-delete-modal__backdrop {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-    padding: 0;
-    background: rgba(28, 25, 23, 0.58);
-    cursor: default;
-}
-
-.education-delete-modal__content {
-    position: relative;
-    z-index: 1;
-    width: min(100%, 480px);
-    padding: 1.5rem;
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    box-shadow: 0 1rem 3rem rgba(28, 25, 23, 0.22);
-}
-
-.education-delete-modal__content h2 {
-    margin: 0 0 0.75rem;
-    font-family:
-        "Space Grotesk",
-        -apple-system,
-        sans-serif;
-    font-size: 1.5rem;
-}
-
-.education-delete-modal__close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    border: 0;
-    padding: 0;
-    background: transparent;
-    color: var(--text-muted);
-    font-size: 1.8rem;
-    line-height: 1;
-    cursor: pointer;
-}
-
-.education-delete-modal__actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.75rem;
-    margin-top: 1.5rem;
-}
-
-.button-danger {
-    background: #b42318;
 }
 
 
@@ -944,12 +874,164 @@ h1, .brand {
     font: inherit;
     font-weight: 700;
     text-decoration: none;
+    transition: background 0.2s;
+}
+
+.button:hover {
+    background: var(--ink);
 }
 
 .button-secondary {
     background: var(--ink);
 }
 
+
+/* ----------------- */
+/* Untuk Delete Page */
+/* ----------------- */
+.delete-page .delete-page-container {
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+}
+
+.delete-page .back-btn {
+    padding: 10px;
+    height: auto;
+    width: 100px;
+
+    text-align: center;
+
+    transition: background-color 0.2s;
+}
+
+.delete-page .back-btn:hover{
+    background-color: var(--ink);
+}
+
+.delete-page .data-card {
+    padding: 20px;
+    margin: 20px 0px;
+
+    border-radius: 10px;
+    border-color: var(--ink);
+    border-width: 5px;
+    border-style: solid;
+
+    background-color: var(--line);
+}
+
+.delete-page .data-card {
+    display: grid;
+    grid-template-areas: "data delete-btn";
+    grid-template-columns: 4fr 1fr;
+    column-gap: 2rem;
+}
+
+.delete-page .data-card .data {
+    grid-area: data;
+    text-align: justify;
+}
+
+.delete-page .data-card .label {
+    font-weight: 600;
+    font-size: medium;
+}
+
+.delete-page .data-card p {
+    margin-top: 10px;
+}
+
+.delete-page .data-card ul {
+    margin-left: 17px;
+}
+
+.delete-page .data-card .delete-btn {
+    grid-area: delete-btn;
+    align-self: center;
+    padding: 0px;
+}
+
+.button-danger {
+    background: #b42318;
+    text-align: center;
+    transition: background 0.2s;
+}
+
+.button-danger:hover {
+    background: var(--ink);
+}
+
+.delete-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 1rem;
+    border: 0;
+    background: transparent;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-modal:popover-open {
+    display: flex;
+}
+
+.delete-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    background: rgba(28, 25, 23, 0.58);
+    cursor: default;
+}
+
+.delete-modal__content {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 480px);
+    padding: 1.5rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 1rem 3rem rgba(28, 25, 23, 0.22);
+}
+
+.delete-modal__content h2 {
+    margin: 0 0 0.75rem;
+    font-family:
+        "Space Grotesk",
+        -apple-system,
+        sans-serif;
+    font-size: 1.5rem;
+}
+
+.delete-modal__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.delete-modal__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
 
 /* --------------------- */
 /* Untuk tampilan mobile */

@@ -91,6 +91,19 @@ def delete_experience(request, experience_id):
     return redirect("main:show_experience")
 
 
+def experience_delete_page(request):
+    json_response = get_experience_json(request)
+
+    experiences = serializers.deserialize('json', json_response.content.decode("utf-8"))
+    experiences = [experience.object for experience in experiences]
+
+    context = {
+        "name": "Aksara Putra Fachruddin",
+        "experience_list": experiences
+    }
+    return render(request, "delete-templates/experience_delete.html", context)
+
+
 # --------- #
 #  project  #
 # --------- #
