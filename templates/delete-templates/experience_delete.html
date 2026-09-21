@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block meta %}
+    <title>Delete Experience</title>
+{% endblock meta %}
+{% block content %}
+    <main class="delete-page">
+        <div class="container delete-page-container">
+            <a class="button back-btn" href="{% url 'main:show_experience' %}">Back</a>
+            {% for experience in experience_list %}
+                <div class="data-card">
+                    <div class="data">
+                        <p>
+                            <span class="label">Title</span><br>
+                            <span class="value">{{ experience.title }}</span>
+                        </p>
+                        <p>
+                            <span class="label">Place</span><br>
+                            <span class="value">{{ experience.place }}</span>
+                        </p>
+                        <p>
+                            <span class="label">Term</span><br>
+                            <span class="value">{{ experience.started_at }} - {{ experience.ended_at }}</span>
+                        </p>
+                        <p>
+                            <span class="label">Role Description</span><br>
+                            <span class="value">{{ experience.description }}</span>
+                        </p>
+                        <p>
+                            <span class="label">Responsibilities</span><br>
+                            <span class="value list-item">
+                                <ul>
+                                    {% for responsibility in experience.responsibility_list %}
+                                        <li>{{ responsibility }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="delete-btn">
+                        {% include "components/experience_delete_modal.html" %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+{% endblock content %}

@@ -34,7 +34,7 @@ class Experience(models.Model):
         return self.ended_at is None
 
     @property
-    def reponsiblity_list(self):
+    def reponsibility_list(self):
         return [responsiblity.strip() for responsiblity in self.responsibilities_list.split(",")]
 
 

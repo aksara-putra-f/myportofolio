@@ -7,11 +7,18 @@
                 <p class="section-kicker">My Experience So Far</p>
                 <div class="section-header project-header">
                     <h1>Experience</h1>
-                    <a href="{% url 'main:create_experience' %}"
-                       class="button add-button experience-add-button">
-                       <span aria-hidden="true">+</span>
-                       Add Experience
-                    </a>
+                    <div class="section-header-action experience-header-action">
+                        <a href="{% url 'main:create_experience' %}"
+                           class="button add-button experience-add-button">
+                            <span aria-hidden="true">+</span>
+                            Add Experience
+                        </a>
+                        <a href="{% url 'main:experience_delete_page' %}"
+                           class="button delete-page-button experience-delete-page-button">
+                            <span aria-hidden="true">&#x1F5D1</span>
+                            Delete Experience
+                        </a>
+                    </div>
                 </div>
                 <form method="get"
                       action="{% url 'main:show_experience' %}"
