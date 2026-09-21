@@ -186,7 +186,7 @@ def create_education(request):
 
 def get_education_json(request):
     institution_name_query = request.GET.get("institution_name", "").strip()
-    educations = Education.objects.all()
+    educations = Education.objects.all().order_by("-year_start")
 
     if institution_name_query:
         educations = educations.filter(institution_name=institution_name_query)

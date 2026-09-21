@@ -42,6 +42,9 @@
                                     {% endfor %}
                                 </ul>
                             </div>
+                            <div class="delete-button">
+                                {% include 'components/education_delete_modal.html' %}
+                            </div>
                         </article>
                     {% empty %}
                         <p class="empty-state">

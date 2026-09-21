@@ -434,15 +434,26 @@ h1, .brand {
 /* ----------------------------------------------- */
 #education-container {
     width: 100%;
+    margin-top: 3rem;
 }
 
 .section-page .education-card {
     display: grid;
-    grid-template-areas: "logo edu-info";
+    grid-template-areas: 
+        "logo edu-info"
+        "delete-btn edu-info";
     grid-template-columns: 192px auto;
-    column-gap: 5px;
-    margin: 30px 0px;
+    column-gap: 10px;
+    margin-bottom: 60px;
     align-items: center;
+    justify-items: center;
+}
+
+.section-page .education-card .delete-button {
+    margin-top: 2rem;
+
+    grid-area: delete-btn;
+    justify-self: center;
 }
 
 .section-page .institution-logo {
@@ -457,6 +468,8 @@ h1, .brand {
     outline-width: 3px;
 
     border-radius: 10px;
+    
+    justify-self: center;
 }
 
 .section-page .education-info {
@@ -479,6 +492,8 @@ h1, .brand {
 
     min-height: 100%;
     padding: 20px;
+
+    width: 100%;
 }
 
 .section-page .education-desc {
@@ -676,6 +691,11 @@ h1, .brand {
 
 .button-danger {
     background: #b42318;
+    transition: background 0.2s;
+}
+
+.button-danger:hover {
+    background: var(--ink);
 }
 
 
