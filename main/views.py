@@ -268,3 +268,19 @@ def delete_skill(request, skill_id):
         return redirect("main:show_skill")
 
     return redirect("main:show_skill")
+
+
+def skill_delete_page(request):
+    json_response = get_skill_json(request)
+    
+    skills = serializers.deserialize(
+        "json",
+        json_response.content.decode("utf-8"),
+    )
+    skills = [skill.object for skill in skills]
+
+    context = {
+    "name": "Aksara Putra Fachruddin",
+    "skill_list": skills,
+    }
+    return render(request, "delete-templates/skill_delete.html", context)
