@@ -186,7 +186,7 @@ def create_education(request):
 
 def get_education_json(request):
     institution_name_query = request.GET.get("institution_name", "").strip()
-    educations = Education.objects.all()
+    educations = Education.objects.all().order_by("-year_start")
 
     if institution_name_query:
         educations = educations.filter(institution_name=institution_name_query)
@@ -205,6 +205,20 @@ def delete_education(request, education_id):
 
     return redirect("main:show_education")
 
+def education_delete_page(request):
+    json_response = get_education_json(request)
+    
+    educations = serializers.deserialize(
+        "json",
+        json_response.content.decode("utf-8"),
+    )
+    educations = [education.object for education in educations]
+
+    context = {
+    "name": "Aksara Putra Fachruddin",
+    "education_list": educations,
+    }
+    return render(request, "delete-templates/education_delete.html", context)
 
 # --------- #
 #   Skill 

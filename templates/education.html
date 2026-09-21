@@ -9,11 +9,18 @@
                 <p class="section-kicker">My Education Background</p>
                 <div class="section-header education-header">
                     <h1>Education</h1>
-                    <a href="{% url 'main:create_education' %}"
-                       class="button add-button education-add-button">
-                        <span aria-hidden="true">+</span>
-                        Add Education
-                    </a>
+                    <div class="section-header-action education-header-action">
+                        <a href="{% url 'main:create_education' %}"
+                           class="button add-button education-add-button">
+                            <span aria-hidden="true">+</span>
+                            Add Education
+                        </a>
+                        <a href="{% url 'main:education_delete_page' %}"
+                           class="button delete-page-button education-delete-page-button">
+                            <span aria-hidden="true">&#x1F5D1</span>
+                            Delete Education
+                        </a>
+                    </div>
                 </div>
                 <form method="get"
                       action="{% url 'main:show_education' %}"

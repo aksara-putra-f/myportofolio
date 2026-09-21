@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block meta %}
+    <title>Delete Education</title>
+{% endblock meta %}
+{% block content %}
+    <main class="delete-page">
+        <div class="container delete-page-container">
+            <a class="button back-btn" href="{% url 'main:show_education' %}">Back</a>
+            {% for education in education_list %}
+                <div class="data-card">
+                    <div class="data">
+                        <p>
+                            <span class="label">Education Year</span><br>
+                            <span class="value">{{ education.year_start }}-{{ education.year_end }}</span>
+                        </p>
+                        <p>
+                            <span class="label">Institution Name</span><br>
+                            <span class="value">{{ education.institution_name }}</span>
+                        </p>
+                        <p>
+                            <span class="label">Major</span><br>
+                            <span class="value">{{ education.major }}</span>
+                        </p>
+                        <p>
+                            <span class="label">Activities</span><br>
+                            <span class="value list-item">
+                                <ul>
+                                    {% for activity in education.activity_list %}
+                                        <li>{{ activity }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="delete-btn">
+                        {% include "components/education_delete_modal.html" %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+{% endblock content %}
