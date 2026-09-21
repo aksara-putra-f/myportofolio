@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block meta %}
+    <title>Delete Skill</title>
+{% endblock meta %}
+{% block content %}
+    <main class="delete-page">
+        <div class="container delete-page-container">
+            <a class="button back-btn" href="{% url 'main:show_project' %}">Back</a>
+            {% for project in project_list %}
+                <div class="data-card">
+                    <div class="data">
+                        <p>
+                            <span class="label">Project Name</span><br>
+                            <span class="value">{{ project.project_name }}</span>
+                        </p>
+                        <p>
+                            <span class="label">Project Type</span><br>
+                            <span class="value">{{ project.project_type }}</span>
+                        </p>
+                        <p>
+                            <span class="label">Project Description</span><br>
+                            <span class="value">{{ project.project_desc }}</span>
+                        </p>
+                    </div>
+                    <div class="delete-btn">
+                        {% include "components/project_delete_modal.html" %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+{% endblock content %}

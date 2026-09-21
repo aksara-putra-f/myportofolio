@@ -7,11 +7,18 @@
                 <p class="section-kicker">Projects I've Been Done</p>
                 <div class="section-header project-header">
                     <h1>Project</h1>
-                    <a href="{% url 'main:create_project' %}"
-                       class="button add-button project-add-button">
-                       <span aria-hidden="true">+</span>
-                       Add Project
-                    </a>
+                    <div class="section-header-action project-header-action">
+                        <a href="{% url 'main:create_project' %}"
+                           class="button add-button project-add-button">
+                            <span aria-hidden="true">+</span>
+                            Add Project
+                        </a>
+                        <a href="{% url 'main:project_delete_page' %}"
+                           class="button delete-page-button project-delete-page-button">
+                            <span aria-hidden="true">&#x1F5D1</span>
+                            Delete Project
+                        </a>
+                    </div>
                 </div>
                 <form method="get"
                       action="{% url 'main:show_project' %}"
