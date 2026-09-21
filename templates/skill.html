@@ -9,11 +9,18 @@
                 <p class="section-kicker">Skills I have</p>
                 <div class="section-header skill-header">
                     <h1>Skill</h1>
-                    <a href="{% url 'main:create_skill' %}"
-                       class="button add-button skill-add-button">
-                       <span aria-hidden="true">+</span>
-                       Add Skill
-                    </a>
+                    <div class="section-header-action skill-header-action">
+                        <a href="{% url 'main:create_skill' %}"
+                           class="button add-button skill-add-button">
+                            <span aria-hidden="true">+</span>
+                            Add Skill
+                        </a>
+                        <a href="{% url 'main:skill_delete_page' %}"
+                           class="button delete-page-button skill-delete-page-button">
+                            <span aria-hidden="true">&#x1F5D1</span>
+                            Delete Skill
+                        </a>
+                    </div>
                 </div>
                 <form method="get"
                       action="{% url 'main:show_skill' %}"
@@ -22,7 +29,7 @@
                              name="skill_name"
                              value="{{ skill_name_query }}"
                              placeholder="Search based on the skill name"
-                             class="search__input"
+                             class="search_input"
                              aria-label="Search based on the skill name">
                       <button type="submit" class="button">Search</button>
                 </form>

@@ -1,0 +1,43 @@
+<p class="skill-status">
+    <button type="button"
+            class="button button-danger"
+            popovertarget="delete-skill-{{ skill.id }}"
+            aria-label="Delete {{ skil.name }}"
+            title="Delete Skill">
+        Delete Skill
+    </button>
+</p>
+<div id="delete-skill-{{ skill.id }}"
+     class="delete-modal"
+     popover="auto"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="delete-skill-name-{{ skill.id }}">
+    <button type="button"
+            class="delete-modal__backdrop"
+            popovertarget="delete-skill-{{ skill.id }}"
+            popovertargetaction="hide"
+            aria-label="Close confirm delete"></button>
+    <div class="delete-modal__content">
+        <button type="button"
+                class="delete-modal__close"
+                popovertarget="delete-skill-{{ skill.id }}"
+                popovertargetaction="hide"
+                aria-label="Close confirm delete">×</button>
+        <h2 id="delete-skill-name-{{ skill.id }}">Delete Skill?</h2>
+        <p>
+            Are you sure you want to delete
+            <strong>{{ skill.name }}</strong>?
+        </p>
+        <div class="delete-modal__actions">
+            <button type="button"
+                    class="button button-secondary"
+                    popovertarget="delete-skill-{{ skill.id }}"
+                    popovertargetaction="hide">Cancel</button>
+            <form method="post" action="{% url 'main:delete_skill' skill.id %}">
+                {% csrf_token %}
+                <button type="submit" class="button button-danger">Yes, Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
