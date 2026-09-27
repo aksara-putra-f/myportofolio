@@ -3,8 +3,8 @@
     <title>Delete Education</title>
 {% endblock meta %}
 {% block content %}
-    <main class="delete-page">
-        <div class="container delete-page-container">
+    <main class="edit-page">
+        <div class="container edit-page-container">
             <a class="button back-btn" href="{% url 'main:show_education' %}">Back</a>
             {% for education in education_list %}
                 <div class="data-card">
@@ -32,8 +32,16 @@
                             </span>
                         </p>
                     </div>
-                    <div class="delete-btn">
-                        {% include "components/education_delete_modal.html" %}
+                    <div class="edit-action">
+                        <div class="delete-btn">
+                            {% include "components/education_delete_modal.html" %}
+                        </div>
+                        <div class="update-btn">
+                            <form method="get"
+                                  action="{% url 'main:update_education' education.id %}">
+                                  <button type="submit" class="button warning-button">Update Education</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             {% endfor %}

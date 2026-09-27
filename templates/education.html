@@ -10,16 +10,20 @@
                 <div class="section-header education-header">
                     <h1>Education</h1>
                     <div class="section-header-action education-header-action">
+                        {% if user.is_superuser %}
                         <a href="{% url 'main:create_education' %}"
                            class="button add-button education-add-button">
                             <span aria-hidden="true">+</span>
                             Add Education
                         </a>
-                        <a href="{% url 'main:education_delete_page' %}"
-                           class="button delete-page-button education-delete-page-button">
-                            <span aria-hidden="true">&#x1F5D1</span>
-                            Delete Education
+                        {% endif %}
+                        {% if user.is_superuser %}
+                        <a href="{% url 'main:edit_education' %}"
+                           class="button edit-button">
+                            <span aria-hidden="true">✎</span>
+                            Edit Education
                         </a>
+                        {% endif %}
                     </div>
                 </div>
                 <form method="get"

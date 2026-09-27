@@ -36,7 +36,8 @@ urlpatterns = [
     path("education/add/", create_education, name="create_education"),
     path("api/educations/", get_education_json, name="get_education_json"),
     path("education/<uuid:education_id>/delete/", delete_education, name="delete_education"),
-    path("education/delete/page", education_delete_page, name="education_delete_page")
+    path("education/<uuid:education_id>/update/", update_education, name="update_education"),
+    path("education/edit/", edit_education, name="edit_education")
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

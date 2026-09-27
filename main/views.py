@@ -304,7 +304,11 @@ def show_education(request):
     return render(request, "education.html", context)
 
 
+@login_required(login_url="/login/")
 def create_education(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     form = EducationForm(request.POST or None, request.FILES or None)
 
     if request.method == "POST" and form.is_valid():
@@ -314,7 +318,9 @@ def create_education(request):
 
     context = {
         "name": "Aksara Putra Fachruddin",
+        "title": "Create Education",
         "form": form,
+        "is_updating_item": False
     }
     return render(request, "form-templates/education_form.html", context)
 
@@ -330,7 +336,11 @@ def get_education_json(request):
     return HttpResponse(education_json, content_type="application/json")
 
 
+@login_required(login_url="/login/")
 def delete_education(request, education_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     education = get_object_or_404(Education, pk=education_id)
 
     if request.method == "POST":
@@ -340,7 +350,37 @@ def delete_education(request, education_id):
 
     return redirect("main:show_education")
 
-def education_delete_page(request):
+
+@login_required(login_url="/login/")
+def update_education(request, education_id):
+    update_education_obj = get_object_or_404(Education, pk=education_id)
+    data = {
+        "year_start" : update_education_obj.year_start,
+        "year_end" : update_education_obj.year_end,
+        "institution_name" : update_education_obj.institution_name,
+        "major" : update_education_obj.major,
+        "activities" : update_education_obj.activities,
+        "institution_logo" : update_education_obj.institution_logo
+    }
+
+    form = EducationForm(request.POST or None, request.FILES or None, initial=data, instance=update_education_obj)
+
+    if request.method == "POST" and form.is_valid():
+            form.save()
+            messages.success(request, "The Project Item Has Been Updated Successfully!")
+            return redirect("main:show_education")
+    
+    context = {
+        "name": "Aksara Putra Fachruddin",
+        "title": "Update Education",
+        "form": form,
+        "is_updating_item" : True
+    }
+    
+    return render(request, "form-templates/education_form.html", context)
+
+
+def edit_education(request):
     json_response = get_education_json(request)
     
     educations = serializers.deserialize(
@@ -353,7 +393,7 @@ def education_delete_page(request):
     "name": "Aksara Putra Fachruddin",
     "education_list": educations,
     }
-    return render(request, "delete-templates/education_delete.html", context)
+    return render(request, "edit-templates/education_edit.html", context)
 
 # --------- #
 #   Skill 
