@@ -283,7 +283,10 @@ def delete_project(request, project_id):
 
 @login_required(login_url="/login/")
 def update_project(request, project_id):
-    if not request.user.is_superuser:
+    editor_group = Group.objects.get(name="Editor")
+    user_is_in_editor_group = editor_group in request.user.groups.all()
+
+    if not (request.user.is_superuser or user_is_in_editor_group):
         raise PermissionDenied
     
     update_project_obj = get_object_or_404(Project, pk=project_id)
