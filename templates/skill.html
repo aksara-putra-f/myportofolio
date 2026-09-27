@@ -17,7 +17,7 @@
                             Add Skill
                         </a>
                         {% endif %}
-                        {% if user.is_superuser %}
+                        {% if user.is_superuser or is_in_editor_group %}
                         <a href="{% url 'main:edit_skill' %}"
                             class="button edit-button">
                             <span aria-hidden="true">✎</span>
