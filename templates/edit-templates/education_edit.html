@@ -33,9 +33,11 @@
                         </p>
                     </div>
                     <div class="edit-action">
+                        {% if user.is_superuser %}
                         <div class="delete-btn">
                             {% include "components/education_delete_modal.html" %}
                         </div>
+                        {% endif %}
                         <div class="update-btn">
                             <form method="get"
                                   action="{% url 'main:update_education' education.id %}">

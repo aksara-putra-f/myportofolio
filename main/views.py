@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
@@ -353,10 +354,14 @@ def show_education(request):
     educations = [education.object for education in educations]
     institution_name_query = request.GET.get("institution_name", "").strip()
 
+    editor_group = Group.objects.get(name="Editor")
+    user_is_in_editor_group = editor_group in request.user.groups.all()
+
     context = {
         "name": "Aksara Putra Fachruddin",
         "education_list": educations,
         "institution_name_query": institution_name_query,
+        "is_in_editor_group": user_is_in_editor_group
     }
     return render(request, "education.html", context)
 
