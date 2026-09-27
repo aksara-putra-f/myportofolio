@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
@@ -87,13 +88,17 @@ def show_experience(request):
     on_going_query = request.GET.get("on_going", "").strip()
     experience_category_query = request.GET.get("experience_category", "").strip()
 
+    editor_group = Group.objects.get(name="Editor")
+    user_is_in_editor_group = editor_group in request.user.groups.all()
+
     context = {
         "name": "Aksara Putra Fachruddin",
         "experience_list": Experience.objects.all(),
         "experience_category": Experience.EXPERIENCE_CHOICES,
         "on_going_query": on_going_query,
         "experience_category": experience_category_query,
-        "experience_category": experience_category
+        "experience_category": experience_category,
+        "is_in_editor_group": user_is_in_editor_group
     }
     return render(request, "experience.html", context)
 
