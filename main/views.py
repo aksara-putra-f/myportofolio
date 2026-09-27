@@ -192,6 +192,19 @@ def edit_experience(request):
     return render(request, "edit-templates/experience_edit.html", context)
 
 
+@login_required(login_url="/login/")
+def toggle_star_experience(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+
+    if request.method == "POST":
+        if request.user in experience.starred_by.all():
+            experience.starred_by.remove(request.user)
+        else:
+            experience.starred_by.add(request.user)
+
+    return redirect("main:show_experience")
+
+
 # --------- #
 #  project  #
 # --------- #
