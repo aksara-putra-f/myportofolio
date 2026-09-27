@@ -17,7 +17,7 @@
                             Add Education
                         </a>
                         {% endif %}
-                        {% if user.is_superuser %}
+                        {% if user.is_superuser or is_in_editor_group %}
                         <a href="{% url 'main:edit_education' %}"
                            class="button edit-button">
                             <span aria-hidden="true">✎</span>
