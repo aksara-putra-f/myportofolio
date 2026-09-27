@@ -415,6 +415,12 @@ def delete_education(request, education_id):
 
 @login_required(login_url="/login/")
 def update_education(request, education_id):
+    editor_group = Group.objects.get(name="Editor")
+    user_is_in_editor_group = editor_group in request.user.groups.all()
+
+    if not (request.user.is_superuser or user_is_in_editor_group):
+        raise PermissionDenied
+
     update_education_obj = get_object_or_404(Education, pk=education_id)
     data = {
         "year_start" : update_education_obj.year_start,
