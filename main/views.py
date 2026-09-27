@@ -177,7 +177,7 @@ def update_experience(request, experience_id):
 
     if request.method == "POST" and form.is_valid():
             form.save()
-            messages.success(request, "The Project Item Has Been Updated Successfully!")
+            messages.success(request, "The Education Item Has Been Updated Successfully!")
             return redirect("main:show_experience")
     
     context = {
@@ -452,7 +452,7 @@ def update_education(request, education_id):
 
     if request.method == "POST" and form.is_valid():
             form.save()
-            messages.success(request, "The Project Item Has Been Updated Successfully!")
+            messages.success(request, "The Education Item Has Been Updated Successfully!")
             return redirect("main:show_education")
     
     context = {
@@ -578,7 +578,7 @@ def update_skill(request, skill_id):
 
     if request.method == "POST" and form.is_valid():
             form.save()
-            messages.success(request, "The Project Item Has Been Updated Successfully!")
+            messages.success(request, "The Skill Item Has Been Updated Successfully!")
             return redirect("main:show_skill")
     
     context = {
