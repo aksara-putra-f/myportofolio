@@ -6,22 +6,32 @@
     <main class="form-page">
         <section class="skill-form-page">
             <div class="container">
-                <h1>Add New Skill Item</h1>
+                <h1>{{ title }}</h1>
                 <form method="post"
-                      action="{% url 'main:create_skill' %}"
+                      action="{% if is_updating_item %}{% url 'main:update_skill' form.instance.pk %}{% else %}{% url 'main:create_skill' %}{% endif %}"
                       class="form skill-form">
                     {% csrf_token %}
                     {% for field in form %}
-                        <div class="form-group">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                            {% for error in field.errors %}
-                                <p class="form-error">{{ error }}</p>
-                            {% endfor %}
-                        </div>
+                        {% if field.field.widget.input_type == "checkbox" %}
+                            <div class="form-group checkbox-group">
+                                {{ field }}
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {% for error in field.errors %}
+                                    <p class="form-error">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% for error in field.errors %}
+                                    <p class="form-error">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     {% endfor %}
-                    <button type="submit" class="button">Add Skill</button>
-                    <a href="{% url 'main:show_skill' %}" class="button button-secondary">Cancel</a>
+                    <button type="submit" class="button">{% if is_updating_item %}Update Skill{% else %}Add Skill{% endif %}</button>
+                    <a href="{% if is_updating_item %}{% url 'main:edit_skill' %}{% else %}{% url 'main:show_skill' %}{% endif %}" class="button button-secondary">Cancel</a>
                 </form>
             </div>
         </section>

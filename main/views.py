@@ -381,7 +381,11 @@ def show_skill(request):
 
 
 
+@login_required(login_url="/login/")
 def create_skill(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     form = SkillForm(request.POST or None)
 
     if request.method == 'POST' and form.is_valid():
@@ -391,7 +395,9 @@ def create_skill(request):
 
     context = {
         "name": "Aksara Putra Fachruddin",
-        "form": form
+        "title": "Add New Skill",
+        "form": form,
+        "is_updating_item": False
     }
 
     return render(request, "form-templates/skill_form.html", context)
@@ -408,7 +414,11 @@ def get_skill_json(request):
     return HttpResponse(skill_json, content_type="application/json")
 
 
+@login_required(login_url="/login/")
 def delete_skill(request, skill_id):
+    if not request.user.is_superuser:
+            raise PermissionDenied
+    
     skill = get_object_or_404(Skill, pk=skill_id)
 
     if request.method == "POST":
@@ -419,7 +429,37 @@ def delete_skill(request, skill_id):
     return redirect("main:show_skill")
 
 
-def skill_delete_page(request):
+@login_required(login_url="/login/")
+def update_skill(request, skill_id):
+    if not request.user.is_superuser:
+            raise PermissionDenied
+    
+    update_skill_obj = get_object_or_404(Skill, pk=skill_id)
+    data = {
+        "name" : update_skill_obj.name,
+        "short_desc" : update_skill_obj.short_desc,
+        "skill_category" : update_skill_obj.skill_category,
+        "highlight_skill" : update_skill_obj.highlight_skill
+    }
+
+    form = SkillForm(request.POST or None, initial=data, instance=update_skill_obj)
+
+    if request.method == "POST" and form.is_valid():
+            form.save()
+            messages.success(request, "The Project Item Has Been Updated Successfully!")
+            return redirect("main:show_skill")
+    
+    context = {
+        "name": "Aksara Putra Fachruddin",
+        "title": "Update Skill",
+        "form": form,
+        "is_updating_item" : True
+    }
+    
+    return render(request, "form-templates/skill_form.html", context)
+
+
+def edit_skill(request):
     json_response = get_skill_json(request)
     
     skills = serializers.deserialize(
@@ -432,4 +472,4 @@ def skill_delete_page(request):
     "name": "Aksara Putra Fachruddin",
     "skill_list": skills,
     }
-    return render(request, "delete-templates/skill_delete.html", context)
+    return render(request, "edit-templates/skill_edit.html", context)
