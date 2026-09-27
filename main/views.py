@@ -98,7 +98,11 @@ def show_experience(request):
     return render(request, "experience.html", context)
 
 
+@login_required(login_url="/login/")
 def create_experience(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     form = ExperienceForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
@@ -108,7 +112,9 @@ def create_experience(request):
 
     context = {
         "name": "Aksara Putra Fachruddin",
+        "title": "Create Experience",
         "form": form,
+        "is_updating_item": False
     }
     return render(request, "form-templates/experience_form.html", context)
 
@@ -127,7 +133,11 @@ def get_experience_json(request):
     return HttpResponse(experience_json, content_type="application/json")
 
 
+@login_required(login_url="/login/")
 def delete_experience(request, experience_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     experience = get_object_or_404(Education, pk=experience_id)
 
     if request.method == "POST":
@@ -138,7 +148,38 @@ def delete_experience(request, experience_id):
     return redirect("main:show_experience")
 
 
-def experience_delete_page(request):
+@login_required(login_url="/login/")
+def update_experience(request, experience_id):
+    update_experience_obj = get_object_or_404(Experience, pk=experience_id)
+    data = {
+        "title" : update_experience_obj.title,
+        "place" : update_experience_obj.place,
+        "description" : update_experience_obj.description,
+        "responsibilities_list" : update_experience_obj.responsibilities_list,
+        "category" : update_experience_obj.category,
+        "started_at" : update_experience_obj.started_at,
+        "ended_at" : update_experience_obj.ended_at,
+        "highlight_experience" : update_experience_obj.highlight_experience
+    }
+
+    form = ExperienceForm(request.POST or None, initial=data, instance=update_experience_obj)
+
+    if request.method == "POST" and form.is_valid():
+            form.save()
+            messages.success(request, "The Project Item Has Been Updated Successfully!")
+            return redirect("main:show_experience")
+    
+    context = {
+        "name": "Aksara Putra Fachruddin",
+        "title": "Update Project",
+        "form": form,
+        "is_updating_item" : True
+    }
+    
+    return render(request, "form-templates/experience_form.html", context)
+
+
+def edit_experience(request):
     json_response = get_experience_json(request)
 
     experiences = serializers.deserialize('json', json_response.content.decode("utf-8"))
@@ -148,7 +189,7 @@ def experience_delete_page(request):
         "name": "Aksara Putra Fachruddin",
         "experience_list": experiences
     }
-    return render(request, "delete-templates/experience_delete.html", context)
+    return render(request, "edit-templates/experience_edit.html", context)
 
 
 # --------- #

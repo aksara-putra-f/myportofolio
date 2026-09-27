@@ -15,8 +15,9 @@ urlpatterns = [
     path("experience/", show_experience, name="show_experience"),
     path("experience/add/", create_experience, name="create_experience"),
     path("api/experiences/", get_experience_json, name="get_experience_json"),
-    path("education/<uuid:education_id>/delete/", delete_experience, name="delete_experience"),
-    path("experience/delete/page/", experience_delete_page, name="experience_delete_page"),
+    path("experience/<uuid:experience_id>/delete/", delete_experience, name="delete_experience"),
+    path("experience/<uuid:experience_id>/update/", update_experience, name="update_experience"),
+    path("experience/edit/", edit_experience, name="edit_experience"),
 
     path("project/", show_project, name="show_project"),
     path("project/add/", create_project, name="create_project"),
