@@ -24,6 +24,7 @@ class Experience(models.Model):
     started_at = models.DateField(blank=True, null=True)
     ended_at = models.DateField(blank=True, null=True)
     highlight_experience = models.BooleanField(default=False)
+    starred_by = models.ManyToManyField(User, related_name="starred_experience", blank=True)
 
     #
     def __str__(self):

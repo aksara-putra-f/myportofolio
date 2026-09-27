@@ -8,16 +8,20 @@
                 <div class="section-header project-header">
                     <h1>Experience</h1>
                     <div class="section-header-action experience-header-action">
+                        {% if user.is_superuser %}
                         <a href="{% url 'main:create_experience' %}"
                            class="button add-button experience-add-button">
                             <span aria-hidden="true">+</span>
                             Add Experience
                         </a>
-                        <a href="{% url 'main:experience_delete_page' %}"
-                           class="button delete-page-button experience-delete-page-button">
-                            <span aria-hidden="true">&#x1F5D1</span>
-                            Delete Experience
+                        {% endif %}
+                        {% if user.is_superuser %}
+                        <a href="{% url 'main:edit_experience' %}"
+                           class="button edit-button">
+                            <span aria-hidden="true">✎</span>
+                            Edit Experience
                         </a>
+                        {% endif %}
                     </div>
                 </div>
                 <form method="get"
@@ -72,6 +76,7 @@
                                     {% endfor %}
                                 </ul>
                             </span>
+                            {% include "components/experience_star.html" %}
                         </article>
                     {% empty %}
                         <p class="empty-state">

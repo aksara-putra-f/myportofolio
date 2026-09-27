@@ -680,7 +680,8 @@ h1, .brand {
         "category status" 
         "title-place title-place" 
         "term term" 
-        "description description";
+        "description description"
+        "star-btn star-btn";
     grid-template-columns: 1fr 0.5fr;
 }
 
@@ -725,6 +726,14 @@ h1, .brand {
 
 .section-page .role-description ul {
     padding-left: 18px;
+}
+
+.section-page #experience-section-page .star-form {
+    grid-area: star-btn;
+    margin-top: 2rem;
+
+    display: flex;
+    justify-content: center;
 }
 
 
