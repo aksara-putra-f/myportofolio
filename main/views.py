@@ -226,11 +226,15 @@ def show_project(request):
     projects = [project.object for project in projects]
     project_type_query = request.GET.get("project_type", "").strip()
 
+    editor_group = Group.objects.get(name="Editor")
+    user_is_in_editor_group = editor_group in request.user.groups.all()
+
     context = {
         "name" : "Aksara Putra Fachruddin",
         "project_list" : projects,
         "project_type_query" : project_type_query,
-        "project_types": Project.PROJECT_TYPE
+        "project_types": Project.PROJECT_TYPE,
+        "is_in_editor_group": user_is_in_editor_group
     }
     return render(request, "project.html", context)
 
@@ -289,7 +293,10 @@ def delete_project(request, project_id):
 
 @login_required(login_url="/login/")
 def update_project(request, project_id):
-    if not request.user.is_superuser:
+    editor_group = Group.objects.get(name="Editor")
+    user_is_in_editor_group = editor_group in request.user.groups.all()
+
+    if not (request.user.is_superuser or user_is_in_editor_group):
         raise PermissionDenied
     
     update_project_obj = get_object_or_404(Project, pk=project_id)
