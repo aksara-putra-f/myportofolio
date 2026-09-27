@@ -32,7 +32,8 @@ urlpatterns = [
     path("skill/add/", create_skill, name="create_skill"),
     path("api/skills/", get_skill_json, name="get_skill_json"),
     path("skill/<uuid:skill_id>/delete/", delete_skill, name="delete_skill"),
-    path("skill/delete/page/", skill_delete_page, name="skill_delete_page"),
+    path("skill/<uuid:skill_id>/update/", update_skill, name="update_skill"),
+    path("skill/edit/", edit_skill, name="edit_skill"),
     
     path("education/", show_education, name="show_education"),
     path("education/add/", create_education, name="create_education"),

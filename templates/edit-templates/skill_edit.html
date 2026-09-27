@@ -3,8 +3,8 @@
     <title>Delete Skill</title>
 {% endblock meta %}
 {% block content %}
-    <main class="delete-page">
-        <div class="container delete-page-container">
+    <main class="edit-page">
+        <div class="container edit-page-container">
             <a class="button back-btn" href="{% url 'main:show_skill' %}">Back</a>
             {% for skill in skill_list %}
                 <div class="data-card">
@@ -22,8 +22,16 @@
                             <span class="value">{{ skill.short_desc }}</span>
                         </p>
                     </div>
-                    <div class="delete-btn">
-                        {% include "components/skill_delete_modal.html" %}
+                    <div class="edit-action">
+                        <div class="delete-btn">
+                            {% include "components/skill_delete_modal.html" %}
+                        </div>
+                        <div class="update-btn">
+                            <form method="get"
+                                  action="{% url 'main:update_skill' skill.id %}">
+                                  <button type="submit" class="button warning-button">Update Skill</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
