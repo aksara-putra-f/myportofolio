@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
@@ -467,12 +468,16 @@ def show_skill(request):
     softskill_list = [skill for skill in skills if skill.skill_category=='softskill']
     skill_name_query = request.GET.get("skill_name", "").strip()
 
+    editor_group = Group.objects.get(name="Editor")
+    user_is_in_editor_group = editor_group in request.user.groups.all()
+
     context = {
         "name": "Aksara Putra Fachruddin",
         "skill_list": skills,
         "hardskill_list" : hardskill_list,
         "softskill_list" : softskill_list,
         "skill_name_query": skill_name_query,
+        "is_in_editor_group": user_is_in_editor_group
     }
     return render(request, "skill.html", context)
 
@@ -528,7 +533,10 @@ def delete_skill(request, skill_id):
 
 @login_required(login_url="/login/")
 def update_skill(request, skill_id):
-    if not request.user.is_superuser:
+    editor_group = Group.objects.get(name="Editor")
+    user_is_in_editor_group = editor_group in request.user.groups.all()
+
+    if not (request.user.is_superuser or user_is_in_editor_group):
             raise PermissionDenied
     
     update_skill_obj = get_object_or_404(Skill, pk=skill_id)
