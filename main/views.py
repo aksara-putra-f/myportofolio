@@ -169,6 +169,7 @@ def show_project(request):
     }
     return render(request, "project.html", context)
 
+
 @login_required(login_url="/login/")
 def create_project(request):
     if not request.user.is_superuser:
@@ -183,7 +184,9 @@ def create_project(request):
 
     context = {
         "name": "Aksara Putra Fachruddin",
-        "form": form
+        "title": "Add New Project",
+        "form": form,
+        "is_updating_item" : False
     }
 
     return render(request, "form-templates/project_form.html", context)
@@ -203,6 +206,7 @@ def get_project_json(request):
                     )
     return HttpResponse(projects_json, content_type="application/json")
 
+
 @login_required(login_url="/login/")
 def delete_project(request, project_id):
     if not request.user.is_superuser:
@@ -218,7 +222,39 @@ def delete_project(request, project_id):
     return redirect("main:show_project")
 
 
-def project_delete_page(request):
+@login_required(login_url="/login/")
+def update_project(request, project_id):
+    update_project_obj = get_object_or_404(Project, pk=project_id)
+    data = {
+        "project_name" : update_project_obj.project_name,
+        "project_desc" : update_project_obj.project_desc,
+        "project_type" : update_project_obj.project_type,
+        "media" : update_project_obj.media,
+        "media_type" : update_project_obj.media_type,
+        "highlight_project" : update_project_obj.highlight_project,
+        "ext_link_provided" : update_project_obj.ext_link_provided,
+        "ext_link" : update_project_obj.ext_link,
+        "starred_by" : update_project_obj.starred_by
+    }
+
+    form = ProjectForm(request.POST or None, request.FILES or None, initial=data, instance=update_project_obj)
+
+    if request.method == "POST" and form.is_valid():
+            form.save()
+            messages.success(request, "The Project Item Has Been Updated Successfully!")
+            return redirect("main:show_project")
+    
+    context = {
+        "name": "Aksara Putra Fachruddin",
+        "title": "Update Project",
+        "form": form,
+        "is_updating_item" : True
+    }
+    
+    return render(request, "form-templates/project_form.html", context)
+
+
+def edit_project(request):
     json_response = get_project_json(request)
     
     projects = serializers.deserialize(
@@ -231,7 +267,7 @@ def project_delete_page(request):
     "name": "Aksara Putra Fachruddin",
     "project_list": projects,
     }
-    return render(request, "delete-templates/project_delete.html", context)
+    return render(request, "edit-templates/project_edit.html", context)
 
 
 @login_required(login_url="/login/")

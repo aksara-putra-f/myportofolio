@@ -16,10 +16,10 @@
                         </a>
                         {% endif %}
                         {% if user.is_superuser %}
-                        <a href="{% url 'main:project_delete_page' %}"
-                           class="button delete-page-button project-delete-page-button">
-                            <span aria-hidden="true">&#x1F5D1</span>
-                            Delete Project
+                        <a href="{% url 'main:edit_project' %}"
+                           class="button edit-button">
+                            <span aria-hidden="true">✎</span>
+                            Edit Project
                         </a>
                         {% endif %}
                     </div>

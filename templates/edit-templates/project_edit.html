@@ -3,8 +3,8 @@
     <title>Delete Skill</title>
 {% endblock meta %}
 {% block content %}
-    <main class="delete-page">
-        <div class="container delete-page-container">
+    <main class="edit-page">
+        <div class="container edit-page-container">
             <a class="button back-btn" href="{% url 'main:show_project' %}">Back</a>
             {% for project in project_list %}
                 <div class="data-card">
@@ -22,8 +22,16 @@
                             <span class="value">{{ project.project_desc }}</span>
                         </p>
                     </div>
-                    <div class="delete-btn">
-                        {% include "components/project_delete_modal.html" %}
+                    <div class="edit-action">
+                        <div class="delete-btn">
+                            {% include "components/project_delete_modal.html" %}
+                        </div>
+                        <div class="update-btn">
+                            <form method="get"
+                                  action="{% url 'main:update_project' project.id %}">
+                                  <button type="submit" class="button warning-button">Update Project</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             {% endfor %}

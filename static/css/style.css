@@ -254,6 +254,80 @@ h1, .brand {
     opacity: 1;
 }
 
+.section-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.section-header h1 {
+    margin-bottom: 0;
+}
+
+.section-header-action {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.add-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.add-button span {
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.search-bar {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.search_input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    text-align: center;
+}
+
+.search-bar select {
+    width: 100%;
+    min-width: 0;
+    padding: 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    text-align: center;
+}
+
+.search_input:focus {
+    outline: 2px solid var(--accent);
+    border-color: var(--accent);
+}
+
+.search-bar select:focus {
+    outline: 2px solid var(--accent);
+    border-color: var(--accent);
+}
+
+.hide {
+    display: none !important;
+}
+
 .star-form {
     display: inline;
 }
@@ -584,80 +658,6 @@ h1, .brand {
     font-weight: 600;
 }
 
-.section-header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.section-header h1 {
-    margin-bottom: 0;
-}
-
-.section-header-action {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.add-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-}
-
-.add-button span {
-    font-size: 1.25rem;
-    line-height: 1;
-}
-
-.search-bar {
-    display: flex;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
-}
-
-.search_input {
-    width: 100%;
-    min-width: 0;
-    padding: 0.7rem;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: #fff;
-    color: var(--ink);
-    font: inherit;
-    text-align: center;
-}
-
-.search-bar select {
-    width: 100%;
-    min-width: 0;
-    padding: 0.7rem;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: #fff;
-    color: var(--ink);
-    font: inherit;
-    text-align: center;
-}
-
-.search_input:focus {
-    outline: 2px solid var(--accent);
-    border-color: var(--accent);
-}
-
-.search-bar select:focus {
-    outline: 2px solid var(--accent);
-    border-color: var(--accent);
-}
-
-.hide {
-    display: none !important;
-}
-
 
 /* ------------------------------------------------ */
 /* Mengatur aturan styling untuk section Experience */
@@ -936,15 +936,15 @@ h1, .brand {
 }
 
 
-/* ----------------- */
-/* Untuk Delete Page */
-/* ----------------- */
-.delete-page .delete-page-container {
+/* --------------- */
+/* Untuk Edit Page */
+/* --------------- */
+.edit-page .edit-page-container {
     margin-top: 5rem;
     margin-bottom: 5rem;
 }
 
-.delete-page .back-btn {
+.edit-page .back-btn {
     padding: 10px;
     height: auto;
     width: 100px;
@@ -954,11 +954,11 @@ h1, .brand {
     transition: background-color 0.2s;
 }
 
-.delete-page .back-btn:hover{
+.edit-page .back-btn:hover{
     background-color: var(--ink);
 }
 
-.delete-page .data-card {
+.edit-page .data-card {
     padding: 20px;
     margin: 20px 0px;
 
@@ -970,33 +970,33 @@ h1, .brand {
     background-color: var(--line);
 }
 
-.delete-page .data-card {
+.edit-page .data-card {
     display: grid;
-    grid-template-areas: "data delete-btn";
+    grid-template-areas: "data edit-action-btn";
     grid-template-columns: 4fr 1fr;
     column-gap: 2rem;
 }
 
-.delete-page .data-card .data {
+.edit-page .data-card .data {
     grid-area: data;
     text-align: justify;
 }
 
-.delete-page .data-card .label {
+.edit-page .data-card .label {
     font-weight: 600;
     font-size: medium;
 }
 
-.delete-page .data-card p {
+.edit-page .data-card p {
     margin-top: 10px;
 }
 
-.delete-page .data-card ul {
+.edit-page .data-card ul {
     margin-left: 17px;
 }
 
-.delete-page .data-card .delete-btn {
-    grid-area: delete-btn;
+.edit-page .data-card .edit-action {
+    grid-area: edit-action-btn;
     align-self: center;
     padding: 0px;
 }
@@ -1004,10 +1004,24 @@ h1, .brand {
 .button-danger {
     background: #b42318;
     text-align: center;
+    width: 100%;
+    margin-bottom: 1rem;
     transition: background 0.2s;
 }
 
 .button-danger:hover {
+    background: var(--ink);
+}
+
+.warning-button {
+    background: #263c9b;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 1rem;
+    transition: background 0.2s;
+}
+
+.warning-button:hover {
     background: var(--ink);
 }
 
