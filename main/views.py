@@ -155,6 +155,12 @@ def delete_experience(request, experience_id):
 
 @login_required(login_url="/login/")
 def update_experience(request, experience_id):
+    editor_group = Group.objects.get(name="Editor")
+    user_is_in_editor_group = editor_group in request.user.groups.all()
+
+    if not (request.user.is_superuser or user_is_in_editor_group):
+        raise PermissionDenied
+
     update_experience_obj = get_object_or_404(Experience, pk=experience_id)
     data = {
         "title" : update_experience_obj.title,
