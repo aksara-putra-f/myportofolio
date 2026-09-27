@@ -1,4 +1,5 @@
 import uuid
+from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
@@ -76,6 +77,7 @@ class Project(models.Model):
     highlight_project = models.BooleanField(default=False, blank=False)
     ext_link_provided = models.BooleanField()
     ext_link = models.URLField(blank=True)
+    starred_by = models.ManyToManyField(User, related_name="starred_project", blank=True)
 
     def __str__(self):
         return self.project_name

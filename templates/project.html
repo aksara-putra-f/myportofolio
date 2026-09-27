@@ -8,16 +8,20 @@
                 <div class="section-header project-header">
                     <h1>Project</h1>
                     <div class="section-header-action project-header-action">
+                        {% if user.is_superuser %}
                         <a href="{% url 'main:create_project' %}"
                            class="button add-button project-add-button">
                             <span aria-hidden="true">+</span>
                             Add Project
                         </a>
+                        {% endif %}
+                        {% if user.is_superuser %}
                         <a href="{% url 'main:project_delete_page' %}"
                            class="button delete-page-button project-delete-page-button">
                             <span aria-hidden="true">&#x1F5D1</span>
                             Delete Project
                         </a>
+                        {% endif %}
                     </div>
                 </div>
                 <form method="get"
@@ -47,7 +51,7 @@
                     {% for project in project_list %}
                         <article class="card project-card">
                             <p class="project-name">{{ project.project_name }}</p>
-                            
+                            {% include "components/project_star.html" with project=project %}
                             {% if project.media_type == 'image' %}
                                 <img class="project-media" src="{{ project.media.url }}" alt="{{ project.name }}">
                             {% elif project.media_type == 'video' %}

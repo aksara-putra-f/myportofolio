@@ -1,12 +1,23 @@
 from django.shortcuts import get_object_or_404, redirect, render
+
 from django.contrib import messages
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.decorators import login_required
+
 from django.core import serializers
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
+
 from main.forms import EducationForm, ExperienceForm, ProjectForm, SkillForm
 from main.models import *
 
+import datetime
+
 # Create your views here.
 def show_main(request):
+    last_login = request.COOKIES.get("last_login", "No login session has been found / no cookie found")
+
     context = {
         "name" : "Aksara Putra Fachruddin",
         "npm" : "2506597284",
@@ -20,9 +31,48 @@ def show_main(request):
         "highlight_experience_list" : Experience.objects.all().filter(highlight_experience = True),
         "highlight_experience_count" : Experience.objects.all().filter(highlight_experience = True).count(),
         "highlited_project_list" : Project.objects.all().filter(highlight_project = True),
-        "highlited_skill_list" : Skill.objects.all().filter(highlight_skill = True)
+        "highlited_skill_list" : Skill.objects.all().filter(highlight_skill = True),
+        "last_login" : last_login
     }
     return render(request, "index.html", context)
+
+
+def register(request):
+    form = UserCreationForm(request.POST or None)
+    
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Account has been created successfully! Please login")
+        return redirect("main:login")
+    
+    context = {
+        "name": "Aksara Putra Fachruddin",
+        "form": form,
+    }
+    return render(request, "register.html", context)
+
+
+def login_user(request):
+    form = AuthenticationForm(request, data=request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        login(request, form.get_user())
+        response = redirect("main:show_main")
+        response.set_cookie("last_login", datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        return response
+
+    context = {
+        "name": "Aksara Putra Fachruddin",
+        "form": form,
+    }
+    return render(request, "login.html", context)
+
+
+def logout_user(request):
+    logout(request)
+    response = redirect("main:show_main")
+    response.delete_cookie("last_login")
+    return response
 
 
 # ---------- #
@@ -119,8 +169,11 @@ def show_project(request):
     }
     return render(request, "project.html", context)
 
-
+@login_required(login_url="/login/")
 def create_project(request):
+    if not request.user.is_superuser:
+            raise PermissionDenied
+    
     form = ProjectForm(request.POST or None, request.FILES or None)
 
     if request.method == "POST" and form.is_valid():
@@ -143,11 +196,18 @@ def get_project_json(request):
     if project_type_query:
         projects = projects.filter(project_type = project_type_query)
 
-    projects_json = serializers.serialize("json", projects)
+    projects_json = serializers.serialize(
+                        "json", 
+                        projects,
+                        use_natural_foreign_keys=True
+                    )
     return HttpResponse(projects_json, content_type="application/json")
 
-
+@login_required(login_url="/login/")
 def delete_project(request, project_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
     project = get_object_or_404(Project, pk=project_id)
     
     if request.method == "POST":
@@ -172,6 +232,19 @@ def project_delete_page(request):
     "project_list": projects,
     }
     return render(request, "delete-templates/project_delete.html", context)
+
+
+@login_required(login_url="/login/")
+def toggle_star(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+
+    if request.method == "POST":
+        if request.user in project.starred_by.all():
+            project.starred_by.remove(request.user)
+        else:
+            project.starred_by.add(request.user)
+
+    return redirect("main:show_project")
 
 
 # --------- #

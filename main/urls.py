@@ -8,6 +8,10 @@ app_name = "main"
 urlpatterns = [
     path("", show_main, name="show_main"),
 
+    path("register/", register, name="register"),
+    path("login/", login_user, name="login"),
+    path("logout/", logout_user, name="logout"),
+
     path("experience/", show_experience, name="show_experience"),
     path("experience/add/", create_experience, name="create_experience"),
     path("api/experiences/", get_experience_json, name="get_experience_json"),
@@ -19,6 +23,7 @@ urlpatterns = [
     path("api/projects/", get_project_json, name="get_project_json"),
     path("project/<uuid:project_id>/delete/", delete_project, name="delete_project"),
     path("project/delete/page/", project_delete_page, name="project_delete_page"),
+    path("project/<uuid:project_id>/star/", toggle_star, name='toggle_star'),
 
     path("skill/", show_skill, name="show_skill"),
     path("skill/add/", create_skill, name="create_skill"),
