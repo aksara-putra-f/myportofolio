@@ -6,6 +6,8 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 
+from django.db.models import Count
+
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
@@ -84,20 +86,19 @@ def show_experience(request):
 
     experiences = serializers.deserialize("json", json_response.content.decode("utf-8"))
     experiences = [experience.object for experience in experiences]
-    experience_category = Experience.EXPERIENCE_CHOICES
+
     on_going_query = request.GET.get("on_going", "").strip()
-    experience_category_query = request.GET.get("experience_category", "").strip()
+    experience_sort_query = request.GET.get("sort-experience", "star-count").strip()
 
     editor_group = Group.objects.get(name="Editor")
     user_is_in_editor_group = editor_group in request.user.groups.all()
 
     context = {
         "name": "Aksara Putra Fachruddin",
-        "experience_list": Experience.objects.all(),
+        "experience_list": experiences,
         "experience_category": Experience.EXPERIENCE_CHOICES,
         "on_going_query": on_going_query,
-        "experience_category": experience_category_query,
-        "experience_category": experience_category,
+        "experience_sort_query": experience_sort_query,
         "is_in_editor_group": user_is_in_editor_group
     }
     return render(request, "experience.html", context)
@@ -126,6 +127,7 @@ def create_experience(request):
 
 def get_experience_json(request):
     on_going_query = request.GET.get("on_going", "").strip()
+    experience_sort_query = request.GET.get("sort-experience", "star-count").strip()
     experiences = Experience.objects.all()
 
     if on_going_query:
@@ -133,6 +135,13 @@ def get_experience_json(request):
             experiences = experiences.filter(ended_at__isnull = True)
         elif on_going_query.lower() == "finished":
             experiences = experiences.filter(ended_at__isnull = False)
+
+    if experience_sort_query == "star-count":
+        experiences = experiences.annotate(star_count=Count("starred_by")).order_by("-star_count")
+    elif experience_sort_query == "name":
+        experiences = experiences.order_by("-title")
+    elif experience_sort_query == "time-date-ended":
+        experiences = experiences.order_by("-ended_at")
 
     experience_json = serializers.serialize("json", experiences)
     return HttpResponse(experience_json, content_type="application/json")
@@ -224,7 +233,9 @@ def show_project(request):
 
     projects = serializers.deserialize("json", json_response.content.decode("utf-8"))
     projects = [project.object for project in projects]
+    
     project_type_query = request.GET.get("project_type", "").strip()
+    sort_project_query = request.GET.get("sort-project", "star-count").strip()
 
     editor_group = Group.objects.get(name="Editor")
     user_is_in_editor_group = editor_group in request.user.groups.all()
@@ -234,6 +245,7 @@ def show_project(request):
         "project_list" : projects,
         "project_type_query" : project_type_query,
         "project_types": Project.PROJECT_TYPE,
+        "sort_project_query": sort_project_query,
         "is_in_editor_group": user_is_in_editor_group
     }
     return render(request, "project.html", context)
@@ -263,10 +275,17 @@ def create_project(request):
 
 def get_project_json(request):
     project_type_query = request.GET.get("project_type","").strip()
+    sort_project_query = request.GET.get("sort-project", "star-count").strip()
     projects = Project.objects.all()
 
     if project_type_query:
         projects = projects.filter(project_type = project_type_query)
+
+    if sort_project_query == "star-count":
+        projects = projects.annotate(star_count=Count("starred_by")).order_by("-star_count")
+    elif sort_project_query == "name":
+        projects = projects.order_by("project_name")
+
 
     projects_json = serializers.serialize(
                         "json", 

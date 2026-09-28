@@ -177,6 +177,15 @@ h1, .brand {
     border-top: 1px solid var(--line);
 }
 
+.nav-user {
+    font-weight: 800;
+    color: var(--accent-dark);
+}
+
+.auth-btn {
+    font-weight: 800;
+}
+
 
 /* ----------------------------- */
 /* Mengatur Section Page Styling */
@@ -835,6 +844,10 @@ h1, .brand {
 
 .project-link:hover {
     background-color: var(--accent-dark);
+}
+
+.project-section .star-form {
+    margin-bottom: 1rem;
 }
 
 

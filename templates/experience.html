@@ -40,7 +40,13 @@
                         <option value="on going">On Going</option>
                         <option value="finished">Finished</option>
                       </select>
-
+                      <select name="sort-experience"
+                              aria-label="Sort Experience Items">
+                            <option value="" disabled>Sort Experience</option>
+                            <option value="star-count" {% if experience_sort_query == "star-count" %}selected{% endif %}>Experience Star Count</option>
+                            <option value="name" {% if experience_sort_query == "name" %}selected{% endif %}>Experience Name</option>
+                            <option value="time-date-ended" {% if experience_sort_query == "time-date-ended" %}selected{% endif %}>Most Recent</option>
+                      </select>
                       <button type="submit" class="button">Search</button>
                 </form>
                 <div class="section-container" id="experience-container">

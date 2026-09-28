@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib.auth.models import Group, User
 
 from main.models import *
 
@@ -130,6 +131,7 @@ class MainTest(TestCase):
         self.assertEqual(self.skill.skill_category, "hardskill")
         self.assertEqual(self.skill.short_desc, "Kemampuan untuk menggunakan Godot engine")
         self.assertTrue(self.skill.highlight_skill)
+        
 
 
     def test_project_model(self):

@@ -45,6 +45,12 @@
                             {% endif %}
                         {% endfor %}
                       </select>
+                      <select name="sort-project"
+                              aria-label="Sort Project Items">
+                            <option value="" disabled>Sort Project</option>
+                            <option value="star-count" {% if sort_project_query == "star-count" %}selected{% endif %}>Project Star Count</option>
+                            <option value="name" {% if sort_project_query == "name" %}selected{% endif %}>Project Name</option>
+                      </select>
                       <button type="submit" class="button">Search</button>
                 </form>
                 <div class="section-container", id="project-container">
