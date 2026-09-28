@@ -52,6 +52,20 @@
 - **Senin, 21 September 2026**
     - Membuat fitur data deletion untuk data Education, Skill, Project, dan Experience
 
+- **Minggu, 27 September 2026**
+    - Membuat fitur update item Education, Skill, Experience, dan Project
+    - Membuat fitur autentifikasi (register, login, logout)
+    - Membuat pembatasan permission untuk user dengan kategori tertentu.
+        - User tidak login: Hanya bisa melihat konten, tidak bisa memberi star
+        - User login dan biasa: Hanya bisa melihat dan memberi star
+        - User login dan termasuk ke dalam grup Editor: Bisa melihat, memberi star, dan mengedit item yang dibatasi hanya bisa melakukan update item
+        - User login dan superuser (admin):bisa melihat, memberi star, menambah item, menghapus item, dan meng-update item
+
+- **Senin, 28 September 2026**
+    - Membuat fitur sorting item Project dan Experience
+        - Item-item project dapat diurutkan berdasarkan nama projek dan jumlah star projek
+        - Item-item experience dapat diurutkan berdasarkan title experience, jumlah star, dan waktu selesai
+
 # Log Penggunaan AI
 **Tanggal:** Sabtu, 5 September 2026
 
@@ -113,6 +127,20 @@
 
 **Link percakapan:** https://claude.ai/share/31f61328-176a-46ec-b7bd-dc3cc9369f49
 
+---
+
+**Tanggal:** 28 September 2026
+
+**Tool:** Claude
+
+**Masalah:** Cara untuk bisa mengurutkan item berdasarkan field model data yang bertipe relasi objek, dalam hal ini adalah ManytoManyField
+
+**Strategi Prompting:** Saya memberikan prompt kepada AI untuk menjelaskan bagaimana caranya untuk mengurutkan objek-objek Model berdasarkan field data yang bertipe relasi objek, dalam hal ini ManytoManyField dan saya juga memberikan konteks bahwa saya sedang membahas projek Django. Saya juga melakukan percakapan lanjutan untuk menjelaskan maksud dari function yang diberikan oleh AI.
+
+**Keputusan dalam Menerima Jawaban AI:** AI menjelaskan bahwa ada function milik QuerySet Django, yaitu annotate(). AI memberikan contoh penggunaannya melalui implementasi kode, tetapi karena saya tidak memberikan file saya, AI memberikannya dalam konteks projek yang ia buat sendiri. Saya memutuskan untuk menggunakan function tersebut, tetapi tentunya saya harus menyesuaikannya dengan projek saya sendiri.
+
+**Link percakapan:** https://claude.ai/share/a4d8d919-fc32-41f5-8e3a-e34d421d4595
+
 # Refleksi Mandiri
 ### Tugas 1
 1. Dalam tugas 1, saya menggunakan element html section. Dalam proses pengerjaannya, saya menjadi lebih mudah untuk melihat pembagian struktur konten pada halaman index.html di text editor saya, dalam hal ini VS Code. Saya dapat dengan jelas menentukan bagian dari index.html yang mengatur bagian 'About Me', 'Projek', 'Education', dan section-section lainnya. Selain itu, elemen html section juga dapat diberikan atribut id dan class yang membuat saya lebih mudah lagi dalam melihat pembagian konten pada file index.html saya. 
@@ -140,3 +168,6 @@ Pada model, kita membuat rancangan atribut-atribut data untuk suatu class model 
 2. JSON lebih disukai karena ukurannya yang lebih ringkas, parser yang sangat cepat, dan integrasi yang sangat natural dengan JavaScript di sisi frontend.
 
 3. Ketika ada request URL untuk mendapatkan data dalam bentuk JSON, maka fungsi terkait pada views.py akan dijalankan. Fungsi tersebut akan mengambil data dari database, lalu mengembalikan data yang sudah dibungkus dalam format JSON ke client (atau fungsi views lainnya yang meminta). Data yang diambil dari database sebelumnya akan di-serialize sebelum dikirimkan. Tujuannya adalah untuk mengubah data yang masih dalam format kompleks, misalnya masih dalam objek model Django, menjadi format JSON yang lebih mudah untuk dipahami dan disimpan.
+
+### Tugas 4
+Pertanyaan reflektif untuk tugas 4 ditiadakan
