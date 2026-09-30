@@ -10,7 +10,11 @@ from django.db.models import Count
 
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
+
 from django.http import HttpResponse
+from django.http import JsonResponse
+
+from django.views.decorators.http import require_POST
 
 from main.forms import EducationForm, ExperienceForm, ProjectForm, SkillForm
 from main.models import *
@@ -229,11 +233,6 @@ def toggle_star_experience(request, experience_id):
 #  project  #
 # --------- #
 def show_project(request):
-    json_response = get_project_json(request)
-
-    projects = serializers.deserialize("json", json_response.content.decode("utf-8"))
-    projects = [project.object for project in projects]
-    
     project_type_query = request.GET.get("project_type", "").strip()
     sort_project_query = request.GET.get("sort-project", "star-count").strip()
 
@@ -242,9 +241,9 @@ def show_project(request):
 
     context = {
         "name" : "Aksara Putra Fachruddin",
-        "project_list" : projects,
         "project_type_query" : project_type_query,
         "project_types": Project.PROJECT_TYPE,
+        "form": ProjectForm(),
         "sort_project_query": sort_project_query,
         "is_in_editor_group": user_is_in_editor_group
     }
@@ -276,7 +275,7 @@ def create_project(request):
 def get_project_json(request):
     project_type_query = request.GET.get("project_type","").strip()
     sort_project_query = request.GET.get("sort-project", "star-count").strip()
-    projects = Project.objects.all()
+    projects = Project.objects.prefetch_related('starred_by').all()
 
     if project_type_query:
         projects = projects.filter(project_type = project_type_query)
@@ -286,13 +285,30 @@ def get_project_json(request):
     elif sort_project_query == "name":
         projects = projects.order_by("project_name")
 
+    data = []
+    for project in projects:
+        starred_users = project.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
 
-    projects_json = serializers.serialize(
-                        "json", 
-                        projects,
-                        use_natural_foreign_keys=True
-                    )
-    return HttpResponse(projects_json, content_type="application/json")
+        data.append({
+            "pk": str(project.id),
+            "fields": {
+                "project_name" : project.project_name,
+                "project_desc" : project.project_desc,
+                "project_type" : project.project_type,
+                "media" : project.media,
+                "media_type" : project.media_type,
+                "highlight_project" : project.highlight_project,
+                "ext_link_provided" : project.ext_link_provided,
+                "ext_link" : project.ext_link,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
 
 
 @login_required(login_url="/login/")
@@ -375,6 +391,25 @@ def toggle_star(request, project_id):
             project.starred_by.add(request.user)
 
     return redirect("main:show_project")
+
+
+@require_POST
+def create_project_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Only the owner of portofolio that can add a project."},
+            status=403,
+        )
+
+    form = ProjectForm(request.POST)
+    if form.is_valid():
+        project = form.save()
+        return JsonResponse(
+            {"message": "The project has been added successfully.", "pk": str(project.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
 
 # --------- #

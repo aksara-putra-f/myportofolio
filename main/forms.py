@@ -1,6 +1,9 @@
 from django.forms import ModelForm, TextInput, Textarea, FileInput, Select, DateInput, CheckboxInput, URLInput
 from main.models import Education, Experience, Project, Skill
 
+from django.core.exceptions import ValidationError
+from django.utils.html import strip_tags
+
 class EducationForm(ModelForm):
     class Meta:
         model = Education
@@ -188,6 +191,17 @@ class ProjectForm(ModelForm):
 
             "ext_link" : URLInput()
         }
+
+    def clean_project_name(self):
+        project_name = strip_tags(self.cleaned_data["project_name"]).strip()
+        if not project_name:
+            raise ValidationError("The project name cannot consist solely of HTML tags.")
+        return project_name
+
+    def clean_description(self):
+        return strip_tags(self.cleaned_data["project_desc"]).strip()
+
+
 
 
 class SkillForm(ModelForm):

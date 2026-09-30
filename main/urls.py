@@ -27,6 +27,7 @@ urlpatterns = [
     path("project/<uuid:project_id>/update/", update_project, name="update_project"),
     path("project/edit/", edit_project, name="edit_project"),
     path("project/<uuid:project_id>/star/", toggle_star, name='toggle_star'),
+    path("projects/add-ajax/", create_project_ajax, name="create_project_ajax"),
 
     path("skill/", show_skill, name="show_skill"),
     path("skill/add/", create_skill, name="create_skill"),
