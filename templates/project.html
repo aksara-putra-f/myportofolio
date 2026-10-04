@@ -15,7 +15,7 @@
                                 class="button add-button project-add-button"
                                 popovertarget="add-project-modal">
                             <span aria-hidden="true">+</span>
-                            Tambah Proyek
+                            Add Project
                         </button>
                         {% endif %}
                         {% if user.is_superuser or is_in_editor_group %}
@@ -31,7 +31,7 @@
                       <select 
                         name="project_type"
                         aria-label="Search based on the project type"
-                        id="search-input">
+                        id="project-type-select">
                         <option value="" disabled>Search based on the project type</option>
                         {% if project_type_query == "" %}
                             <option value="" selected>Show All Project Type</option>
@@ -49,7 +49,7 @@
                       </select>
                       <select name="sort-project"
                               aria-label="Sort Project Items"
-                              id="search-input">
+                              id="sort-project-select">
                             <option value="" disabled>Sort Project</option>
                             <option value="star-count" {% if sort_project_query == "star-count" %}selected{% endif %}>Project Star Count</option>
                             <option value="name" {% if sort_project_query == "name" %}selected{% endif %}>Project Name</option>
@@ -93,7 +93,8 @@
         const emptyState = document.getElementById('empty');
         const container = document.getElementById('project-container');
         const searchForm = document.getElementById('project-search-bar');
-        const searchInput = document.getElementById('search-input');
+        const projectTypeSelect = document.getElementById('project-type-select');
+        const sortProjectSelect = document.getElementById('sort-project-select');
 
         // Menyembunyikan/Menampilkan section halaman
         function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showContainer = false }) {
@@ -121,26 +122,27 @@
             const articleElement = document.createElement('article');
             articleElement.className = 'card project-card';
 
+            let projectMedia = ``;
             if (project.media_type == 'image') {
                 if (project.media) {
-                    const projectMedia = `<img class="project-media" src="${ escapeHtml(project.media.url) }" alt="${ escapeHtml(project.name) }">`
+                    projectMedia = `<img class="project-media" src="${project.media}" alt="${ escapeHtml(project.project_name) }">`
                 } else {
-                    const projectMedia = `<img class="project-media" src="media/no_image_square.png" alt="${ escapeHtml(project.name) }">`
+                    projectMedia = `<img class="project-media" src="media/no_image_square.png" alt="${ escapeHtml(project.project_name) }">`
                 }
             } else if (project.media_type == 'video') {
                 if (project.media) {
-                    const projectMedia = `<video class="project-media" autoplay muted loop controls>\
-                                            <source src="${ escapeHtml(project.media.url) }" type="video/mp4">\
-                                            <source src="${ escapeHtml(project.media.url) }" type="video/webm">\
-                                            <source src="${ escapeHtml(project.media.url) }" type="video/ogg">\
+                    projectMedia = `<video class="project-media" autoplay muted loop controls>\
+                                            <source src="${project.media}" type="video/mp4">\
+                                            <source src="${project.media}" type="video/webm">\
+                                            <source src="${project.media}" type="video/ogg">\
                                          </video>`
                 } else {
-                    const projectMedia = `<img class="project-media" src="media/no_image_square.png" alt="${ escapeHtml(project.name) }">`
+                    projectMedia = `<img class="project-media" src="media/no_image_square.png" alt="${ escapeHtml(project.project_name) }">`
                 }
             }
 
-            const urlHtml = project.project_url 
-                ? `<a class="project-link" href="${ escapeHtml(project.ext_link) }" target="_blank">See the Project</a>`
+            const urlHtml = project.ext_link_provided
+                ? `<a class="project-link" href="${project.ext_link}" target="_blank">See the Project</a>`
                 : '';
 
             // Dummy UUID digunakan untuk digantikan oleh ID asli dari data JSON
@@ -177,32 +179,34 @@
                     </button>
                 </form>
 
-                {% if project.media_type == 'image' %}
-                    ${escapeHtml(projectMedia)}
-                {% elif project.media_type == 'video' %}
-                    ${escapeHtml(projectMedia)}
-                {% endif %}
+                ${projectMedia}
                 
                 <p class="project-desc">${escapeHtml(project.project_desc)}</p>
 
-                {% if project.ext_link_provided %}
-                    ${escapeHtml(urlHtml)}
-                {% endif %}
+                ${urlHtml}
             `;
 
             articleElement.innerHTML = completeCardHtml;
             return articleElement;
         }
 
+        // Helper method: Membuat path URL untuk mendapatkan JSON data projek
+        function buildGetProjectUrl() {
+            let projectTypeSelectValue = projectTypeSelect.value;
+            let sortProjectSelectValue = sortProjectSelect.value;
+
+            return `${BASE_PROJECTS_ENDPOINT}?project_type=${encodeURIComponent(projectTypeSelectValue)}&sort-project=${encodeURIComponent(sortProjectSelectValue)}`
+        }
+
         // Fetch data project
-        async function fetchProjects(searchQuery = "") {
+        async function fetchProjects() {
             if (projectsAbortController) projectsAbortController.abort();
             projectsAbortController = new AbortController();
 
             try {
                 displayPageSection({ showLoading: true });
                 
-                const url = searchQuery ? `${BASE_PROJECTS_ENDPOINT}?project_name=${encodeURIComponent(searchQuery)}` : BASE_PROJECTS_ENDPOINT;
+                const url = buildGetProjectUrl();
                 
                 const response = await fetch(url, {
                     headers: { 'Accept': 'application/json' },
@@ -220,7 +224,7 @@
                     projectData.forEach(item => {
                         container.appendChild(buildProjectCardElement(item));
                     });
-                    displayPageSection({ showGrid: true });
+                    displayPageSection({ showContainer: true });
                 }
             } catch (error) {
                 if (error.name === 'AbortError') return;
@@ -231,20 +235,11 @@
 
         // Event Handlers untuk Form Search
         function searchProjects() {
-            fetchProjects(searchInput.value.trim());
+            fetchProjects();
         }
-
-        searchInput.addEventListener("input", function() {
-            clearTimeout(searchDebounceTimer);
-
-            searchDebounceTimer = setTimeout(function() {
-                searchProjects();
-            }, SEARCH_DEBOUNCE_DELAY);
-        });
 
         searchForm.addEventListener("submit", function(event) {
             event.preventDefault();
-            clearTimeout(searchDebounceTimer);
             searchProjects();
         });
 
@@ -252,7 +247,7 @@
             document.getElementById("add-project-modal").hidePopover();
         }
 
-            const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_project_ajax' %}";
+        const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_project_ajax' %}";
         const projectForm = document.getElementById('project-form');
 
         // Membaca nilai cookie, digunakan untuk mengambil token CSRF
@@ -289,17 +284,17 @@
                 if (response.ok) {
                     projectForm.reset();
                     closeProjectModal();
-                    showToast('Berhasil', 'Proyek baru berhasil ditambahkan!', 'success');
-                    fetchProjects(searchInput.value.trim());
+                    showToast('Success', 'New Project has been successfully added!', 'success');
+                    fetchProjects();
                 } else {
                     const errorMessages = result.errors
                         ? Object.values(result.errors).flat().map(error => error.message)
-                        : [result.message || `Terjadi kesalahan (status ${response.status}).`];
-                    showToast('Gagal menambahkan proyek', errorMessages.join(' '), 'error');
+                        : [result.message || `Error has occured (status ${response.status}).`];
+                    showToast('Failed to add the project', errorMessages.join(' '), 'error');
                 }
             } catch (error) {
                 console.error('Error adding project:', error);
-                showToast('Gagal menambahkan proyek', 'Tidak dapat terhubung ke server. Silakan coba lagi.', 'error');
+                showToast('Failed to add the project', 'Failed to connect with the server. Please try again.', 'error');
             } finally {
                 submitButton.disabled = false;
             }
@@ -310,6 +305,6 @@
         }
 
         // Start application
-        fetchProjects(searchInput.value.trim());
+        fetchProjects();
     </script>
 {% endblock content %}

@@ -16,6 +16,8 @@ from django.http import JsonResponse
 
 from django.views.decorators.http import require_POST
 
+from django.templatetags.static import static
+
 from main.forms import EducationForm, ExperienceForm, ProjectForm, SkillForm
 from main.models import *
 
@@ -285,11 +287,20 @@ def get_project_json(request):
     elif sort_project_query == "name":
         projects = projects.order_by("project_name")
 
+    # Image default ketika user tidak meng-upload media untuk project
+    DEFAULT_IMAGE = static("img/no_image_square.png")
     data = []
     for project in projects:
         starred_users = project.starred_by.all()
         is_starred = request.user in starred_users if request.user.is_authenticated else False
         starred_by_names = ", ".join([u.username for u in starred_users])
+
+        if project.media:
+            media_url = project.media.url
+            media_type = project.media_type
+        else:
+            media_url = DEFAULT_IMAGE
+            media_type = 'image'
 
         data.append({
             "pk": str(project.id),
@@ -297,8 +308,8 @@ def get_project_json(request):
                 "project_name" : project.project_name,
                 "project_desc" : project.project_desc,
                 "project_type" : project.project_type,
-                "media" : project.media,
-                "media_type" : project.media_type,
+                "media" : media_url,
+                "media_type" : media_type,
                 "highlight_project" : project.highlight_project,
                 "ext_link_provided" : project.ext_link_provided,
                 "ext_link" : project.ext_link,
@@ -365,17 +376,8 @@ def update_project(request, project_id):
 
 
 def edit_project(request):
-    json_response = get_project_json(request)
-    
-    projects = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    projects = [project.object for project in projects]
-
     context = {
-    "name": "Aksara Putra Fachruddin",
-    "project_list": projects,
+    "name": "Aksara Putra Fachruddin"
     }
     return render(request, "edit-templates/project_edit.html", context)
 
@@ -401,7 +403,7 @@ def create_project_ajax(request):
             status=403,
         )
 
-    form = ProjectForm(request.POST)
+    form = ProjectForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         project = form.save()
         return JsonResponse(

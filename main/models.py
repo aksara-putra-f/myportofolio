@@ -73,7 +73,7 @@ class Project(models.Model):
     project_name = models.CharField(max_length=250, null=False, blank=False)
     project_desc = models.TextField()
     project_type = models.CharField(choices=PROJECT_TYPE, default='game project')
-    media = models.FileField(upload_to="project-media/", default="no_image_square.png", blank=False, null=True)
+    media = models.FileField(upload_to="project-media/", blank=True, null=True)
     media_type = models.CharField(blank=False, choices=MEDIA_TYPE, default='image')
     highlight_project = models.BooleanField(default=False, blank=False)
     ext_link_provided = models.BooleanField()

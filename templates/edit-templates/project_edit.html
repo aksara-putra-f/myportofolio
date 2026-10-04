@@ -22,24 +22,17 @@
             </div>
 
             <!-- Project Container -->
-            <div class="section-container hide", id="project-container"></div>
-            
-            {% for project in project_list %}
-                <div class="data-card">
-                    
-                </div>
-            {% endfor %}
+            <div class="section-container hide", id="project-container">
+                
+            </div>
+
         </div>
     </main>
     <script>
         // Konfigurasi
         const BASE_PROJECTS_ENDPOINT = "{% url 'main:get_project_json' %}";
         const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
-        const SEARCH_DEBOUNCE_DELAY = 300;
-        let searchDebounceTimer;
-        let projectsAbortController;
-
-        // Elemen DOM
+        
         const loadingState = document.getElementById('loading');
         const errorState = document.getElementById('error');
         const emptyState = document.getElementById('empty');
@@ -68,72 +61,117 @@
             const project = item.fields;
             const projectId = item.pk;
 
-            const articleElement = document.createElement('div');
-            articleElement.className = 'data-card';
+            const dataCard = document.createElement('div');
+            dataCard.className = 'data-card'
 
-            const urlHtml = project.project_url 
-                ? `<a class="project-link" href="${ escapeHtml(project.ext_link) }" target="_blank">See the Project</a>`
-                : '';
+            const dataElement = document.createElement('div');
+            dataElement.className = 'data';
+
+            const editActionElement = document.createElement('div')
+            editActionElement.className = 'edit-action'
+
+            dataElement.innerHTML = `
+                <p>
+                    <span class="label">Project Name</span><br>
+                    <span class="value">${ project.project_name }</span>
+                </p>
+                <p>
+                    <span class="label">Project Type</span><br>
+                    <span class="value">${ project.project_type }</span>
+                </p>
+                <p>
+                    <span class="label">Project Description</span><br>
+                    <span class="value">${ project.project_desc }</span>
+                </p>
+            `
 
             // Dummy UUID digunakan untuk digantikan oleh ID asli dari data JSON
             const deleteUrl = "{% url 'main:delete_project' '00000000-0000-0000-0000-000000000000' %}"
                 .replace('00000000-0000-0000-0000-000000000000', projectId);
+            const updateUrl = "{% url 'main:update_project' '00000000-0000-0000-0000-000000000000' %}"
+                .replace('00000000-0000-0000-0000-000000000000', projectId);
 
-            const deleteHtml = IS_SUPERUSER 
-                ? `<form method="post" action="${escapeHtml(deleteUrl)}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="button button-danger" onclick="return confirm('Yakin ingin menghapus project ini?');">Hapus</button>
-                </form>`
-                : '';
-                
-            // Komponen card
-            const completeCardHtml = `
-                <div class="data">
-                    <p>
-                        <span class="label">Project Name</span><br>
-                        <span class="value">${escapeHtml(project.project_name)}</span>
+            let editAction = ``;
+            if (IS_SUPERUSER) {
+                editAction = `
+                    <p class="project-status">
+                        <button type="button"
+                                class="button button-danger"
+                                popovertarget="delete-project-${projectId}"
+                                aria-label="Hapus ${project.project_name}"
+                                title="Delete Project">
+                            Delete project
+                        </button>
                     </p>
-                    <p>
-                        <span class="label">Project Type</span><br>
-                        <span class="value">${escapeHtml(project.project_type)}</span>
-                    </p>
-                    <p>
-                        <span class="label">Project Description</span><br>
-                        <span class="value">${escapeHtml(project.project_desc)}</span>
-                    </p>
-                </div>
-                <div class="edit-action">
-                    {% if user.is_superuser %}
-                    <div class="delete-btn">
-                        {% include "components/project_delete_modal.html" %}
+                    <div id="delete-project-${projectId}"
+                        class="delete-modal"
+                        popover="auto"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="delete-project-title-${projectId}">
+                        <button type="button"
+                                class="delete-modal__backdrop"
+                                popovertarget="delete-project-${projectId}"
+                                popovertargetaction="hide"
+                                aria-label="Close confirm delete"></button>
+                        <div class="delete-modal__content">
+                            <button type="button"
+                                    class="delete-modal__close"
+                                    popovertarget="delete-project-${projectId}"
+                                    popovertargetaction="hide"
+                                    aria-label="Close confirm delete">×</button>
+                            <h2 id="delete-project-title-${projectId}">Delete Project?</h2>
+                            <p>
+                                Are you sure you want to delete
+                                <strong>${project.project_name}</strong>?
+                            </p>
+                            <div class="delete-modal__actions">
+                                <button type="button"
+                                        class="button button-secondary"
+                                        popovertarget="delete-project-${projectId}"
+                                        popovertargetaction="hide">Cancel</button>
+                                <form method="post" action="${deleteUrl}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button button-danger">Yes, Delete</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                    {% endif %}
                     <div class="update-btn">
                         <form method="get"
-                                action="{% url 'main:update_project' project.id %}">
+                                action="${updateUrl}">
                                 <button type="submit" class="button warning-button">Update Project</button>
                         </form>
                     </div>
-                </div>
-            `;
+                `
+            } else {
+                editAction = `
+                    <div class="update-btn">
+                        <form method="get"
+                                action="${updateUrl}">
+                                <button type="submit" class="button warning-button">Update Project</button>
+                        </form>
+                    </div>
+                `
+            }
+            editActionElement.innerHTML = editAction;
 
-            articleElement.innerHTML = completeCardHtml;
-            return articleElement;
+            // Komponen card
+            dataCard.appendChild(dataElement);
+            dataCard.appendChild(editActionElement);
+
+            return dataCard;
         }
 
         // Fetch data project
-        async function fetchProjects(searchQuery = "") {
-            if (projectsAbortController) projectsAbortController.abort();
-            projectsAbortController = new AbortController();
-
+        async function fetchProjects() {
             try {
                 displayPageSection({ showLoading: true });
                 
-                const url = searchQuery ? `${BASE_PROJECTS_ENDPOINT}?project_name=${encodeURIComponent(searchQuery)}` : BASE_PROJECTS_ENDPOINT;
+                const url = BASE_PROJECTS_ENDPOINT;
                 
                 const response = await fetch(url, {
-                    headers: { 'Accept': 'application/json' },
-                    signal: projectsAbortController.signal,
+                    headers: { 'Accept': 'application/json' }
                 });
 
                 if (!response.ok) throw new Error('Failed to fetch data');
@@ -147,7 +185,7 @@
                     projectData.forEach(item => {
                         container.appendChild(buildProjectCardElement(item));
                     });
-                    displayPageSection({ showGrid: true });
+                    displayPageSection({ showContainer: true });
                 }
             } catch (error) {
                 if (error.name === 'AbortError') return;
@@ -156,87 +194,7 @@
             }
         }
 
-        // Event Handlers untuk Form Search
-        function searchProjects() {
-            fetchProjects(searchInput.value.trim());
-        }
-
-        searchInput.addEventListener("input", function() {
-            clearTimeout(searchDebounceTimer);
-
-            searchDebounceTimer = setTimeout(function() {
-                searchProjects();
-            }, SEARCH_DEBOUNCE_DELAY);
-        });
-
-        searchForm.addEventListener("submit", function(event) {
-            event.preventDefault();
-            clearTimeout(searchDebounceTimer);
-            searchProjects();
-        });
-
-        function closeProjectModal() {
-            document.getElementById("add-project-modal").hidePopover();
-        }
-
-            const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_project_ajax' %}";
-        const projectForm = document.getElementById('project-form');
-
-        // Membaca nilai cookie, digunakan untuk mengambil token CSRF
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        // Mengirim data form ke server
-        async function addProject(event) {
-            event.preventDefault();
-
-            const submitButton = projectForm.querySelector('button[type="submit"]');
-            submitButton.disabled = true;
-
-            try {
-                const response = await fetch(CREATE_PROJECT_ENDPOINT, {
-                    method: 'POST',
-                    headers: { 'X-CSRFToken': getCookie('csrftoken') },
-                    body: new FormData(projectForm),
-                });
-                const result = await response.json().catch(() => ({}));
-
-                if (response.ok) {
-                    projectForm.reset();
-                    closeProjectModal();
-                    showToast('Berhasil', 'Proyek baru berhasil ditambahkan!', 'success');
-                    fetchProjects(searchInput.value.trim());
-                } else {
-                    const errorMessages = result.errors
-                        ? Object.values(result.errors).flat().map(error => error.message)
-                        : [result.message || `Terjadi kesalahan (status ${response.status}).`];
-                    showToast('Gagal menambahkan proyek', errorMessages.join(' '), 'error');
-                }
-            } catch (error) {
-                console.error('Error adding project:', error);
-                showToast('Gagal menambahkan proyek', 'Tidak dapat terhubung ke server. Silakan coba lagi.', 'error');
-            } finally {
-                submitButton.disabled = false;
-            }
-        }
-
-        if (projectForm) {
-            projectForm.addEventListener('submit', addProject);
-        }
-
         // Start application
-        fetchProjects(searchInput.value.trim());
+        fetchProjects();
     </script>
 {% endblock content %}
