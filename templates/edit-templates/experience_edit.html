@@ -6,6 +6,28 @@
     <main class="edit-page">
         <div class="container edit-page-container">
             <a class="button back-btn" href="{% url 'main:show_experience' %}">Back</a>
+            <!-- Loading State -->
+            <div id="loading" class="empty-state hide">
+                <p>Loading projects...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="error" class="empty-state hide">
+                <p>Failed to load projects data. Please try again.</p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty" class="empty-state hide">
+                <p>No project has been added or found.</p>
+            </div>
+
+            <!-- Project Container -->
+            <div class="section-container hide" id="experience-container">
+                
+            </div>
+            
+            
+            
             {% for experience in experience_list %}
                 <div class="data-card">
                     <div class="data">
@@ -53,4 +75,196 @@
             {% endfor %}
         </div>
     </main>
+    <script>
+        // Konfigurasi
+        const BASE_EXPERIENCES_ENDPOINT = "{% url 'main:get_experience_json' %}";
+        const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+        
+        const loadingState = document.getElementById('loading');
+        const errorState = document.getElementById('error');
+        const emptyState = document.getElementById('empty');
+        const container = document.getElementById('experience-container');
+
+        // Menyembunyikan/Menampilkan section halaman
+        function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showContainer = false }) {
+            loadingState.classList.toggle('hide', !showLoading);
+            errorState.classList.toggle('hide', !showError);
+            emptyState.classList.toggle('hide', !showEmpty);
+            container.classList.toggle('hide', !showContainer);
+        }
+
+        // Mengubah karakter khusus HTML menjadi entity agar ditampilkan sebagai teks
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+        }
+
+        // Membuat elemen card project
+        function buildExperienceCardElement(item) {
+            const experience = item.fields;
+            const experienceId = item.pk;
+
+            const dataCard = document.createElement('div');
+            dataCard.className = 'data-card'
+
+            const dataElement = document.createElement('div');
+            dataElement.className = 'data';
+
+            const editActionElement = document.createElement('div')
+            editActionElement.className = 'edit-action'
+
+            dataElement.innerHTML = `
+                <p>
+                    <span class="label">Title</span><br>
+                    <span class="value">${experience.experience_title}</span>
+                </p>
+                <p>
+                    <span class="label">Place</span><br>
+                    <span class="value">${experience.experience_place}</span>
+                </p>
+                <p>
+                    <span class="label">Term</span><br>
+                    <span class="value">${experience.started_at} - ${experience.ended_at}</span>
+                </p>
+                <p>
+                    <span class="label">Role Description</span><br>
+                    <span class="value">${experience.description}</span>
+                </p>
+            `
+            
+            let activityListPart = document.createElement('p');
+            activityListPart.innerHTML = `<span class="label">Responsibilities</span><br>`;
+            
+            let activityListContainer = document.createElement('span');
+            activityListContainer.className = 'value list-item';
+
+            let activityList = document.createElement('ul');
+            for (let activity of experience.responsibilities_list) {
+                let activityItem = document.createElement('li');
+                activityItem.textContent = activity;
+                activityList.appendChild(activityItem);
+            }
+            activityListContainer.appendChild(activityList);
+            activityListPart.appendChild(activityListContainer);
+
+
+            dataElement.appendChild(activityListPart);
+
+
+            // Dummy UUID digunakan untuk digantikan oleh ID asli dari data JSON
+            const deleteUrl = "{% url 'main:delete_experience' '00000000-0000-0000-0000-000000000000' %}"
+                .replace('00000000-0000-0000-0000-000000000000', experienceId);
+            const updateUrl = "{% url 'main:update_experience' '00000000-0000-0000-0000-000000000000' %}"
+                .replace('00000000-0000-0000-0000-000000000000', experienceId);
+
+            let editAction = ``;
+            if (IS_SUPERUSER) {
+                editAction = `
+                    <p class="experience-status">
+                        <button type="button"
+                                class="button button-danger"
+                                popovertarget="delete-experience-${experienceId}"
+                                aria-label="Delete ${experience.experience_title}"
+                                title="Delete Experience">
+                            Delete Experience
+                        </button>
+                    </p>
+                    <div id="delete-experience-${experienceId}"
+                        class="delete-modal"
+                        popover="auto"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="delete-experience-title-${experienceId}">
+                        <button type="button"
+                                class="delete-modal__backdrop"
+                                popovertarget="delete-experience-${experienceId}"
+                                popovertargetaction="hide"
+                                aria-label="Close confirm delete"></button>
+                        <div class="delete-modal__content">
+                            <button type="button"
+                                    class="delete-modal__close"
+                                    popovertarget="delete-experience-${experienceId}"
+                                    popovertargetaction="hide"
+                                    aria-label="Close confirm delete">×</button>
+                            <h2 id="delete-experience-title-${experienceId}">Delete Experience?</h2>
+                            <p>
+                                Are you sure you want to delete
+                                <strong>${experience.experience_title}</strong>?
+                            </p>
+                            <div class="delete-modal__actions">
+                                <button type="button"
+                                        class="button button-secondary"
+                                        popovertarget="delete-experience-${experienceId}"
+                                        popovertargetaction="hide">Cancel</button>
+                                <form method="post" action="${deleteUrl}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button button-danger">Yes, Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="update-btn">
+                        <form method="get"
+                                action="${updateUrl}">
+                                <button type="submit" class="button warning-button">Update Project</button>
+                        </form>
+                    </div>
+                `
+            } else {
+                editAction = `
+                    <div class="update-btn">
+                        <form method="get"
+                                action="${updateUrl}">
+                                <button type="submit" class="button warning-button">Update Project</button>
+                        </form>
+                    </div>
+                `
+            }
+            editActionElement.innerHTML = editAction;
+
+            // Komponen card
+            dataCard.appendChild(dataElement);
+            dataCard.appendChild(editActionElement);
+
+            return dataCard;
+        }
+
+        // Fetch data project
+        async function fetchProjects() {
+            try {
+                displayPageSection({ showLoading: true });
+                
+                const url = BASE_EXPERIENCES_ENDPOINT;
+                
+                const response = await fetch(url, {
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch data');
+
+                const experienceData = await response.json();
+
+                if (experienceData.length === 0) {
+                    displayPageSection({ showEmpty: true });
+                } else {
+                    container.innerHTML = '';
+                    experienceData.forEach(item => {
+                        container.appendChild(buildExperienceCardElement(item));
+                    });
+                    displayPageSection({ showContainer: true });
+                }
+            } catch (error) {
+                if (error.name === 'AbortError') return;
+                console.error('Error loading projects:', error);
+                displayPageSection({ showError: true });
+            }
+        }
+
+        // Start application
+        fetchProjects();
+    </script>
 {% endblock content %}

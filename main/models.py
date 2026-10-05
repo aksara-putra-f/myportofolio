@@ -21,7 +21,7 @@ class Experience(models.Model):
     description = models.TextField()
     responsibilities_list = models.TextField(blank=False)
     category = models.CharField(max_length=20, choices=EXPERIENCE_CHOICES, default='full-time')
-    started_at = models.DateField(blank=True, null=True)
+    started_at = models.DateField(blank=False, null=True)
     ended_at = models.DateField(blank=True, null=True)
     highlight_experience = models.BooleanField(default=False)
     starred_by = models.ManyToManyField(User, related_name="starred_experience", blank=True)

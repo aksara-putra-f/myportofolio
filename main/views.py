@@ -88,12 +88,7 @@ def logout_user(request):
 # Experience #
 # ---------- #
 def show_experience(request):
-    json_response = get_experience_json(request)
-
-    experiences = serializers.deserialize("json", json_response.content.decode("utf-8"))
-    experiences = [experience.object for experience in experiences]
-
-    on_going_query = request.GET.get("on_going", "").strip()
+    on_going_query = request.GET.get("on-going", "").strip()
     experience_sort_query = request.GET.get("sort-experience", "star-count").strip()
 
     editor_group = Group.objects.get(name="Editor")
@@ -101,11 +96,11 @@ def show_experience(request):
 
     context = {
         "name": "Aksara Putra Fachruddin",
-        "experience_list": experiences,
         "experience_category": Experience.EXPERIENCE_CHOICES,
         "on_going_query": on_going_query,
         "experience_sort_query": experience_sort_query,
-        "is_in_editor_group": user_is_in_editor_group
+        "is_in_editor_group": user_is_in_editor_group,
+        "form": ExperienceForm()
     }
     return render(request, "experience.html", context)
 
@@ -132,9 +127,9 @@ def create_experience(request):
 
 
 def get_experience_json(request):
-    on_going_query = request.GET.get("on_going", "").strip()
+    on_going_query = request.GET.get("on-going", "").strip()
     experience_sort_query = request.GET.get("sort-experience", "star-count").strip()
-    experiences = Experience.objects.all()
+    experiences = Experience.objects.prefetch_related('starred_by').all()
 
     if on_going_query:
         if on_going_query.lower() == "on going":
@@ -149,8 +144,31 @@ def get_experience_json(request):
     elif experience_sort_query == "time-date-ended":
         experiences = experiences.order_by("-ended_at")
 
-    experience_json = serializers.serialize("json", experiences)
-    return HttpResponse(experience_json, content_type="application/json")
+    data = []
+    for experience in experiences:
+        starred_users = experience.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
+
+        data.append({
+            "pk": str(experience.id),
+            "fields": {
+                "experience_title" : experience.title,
+                "experience_place" : experience.place,
+                "description" : experience.description,
+                "responsibilities_list" : experience.responsibility_list,
+                "category" : experience.get_category_display(),
+                "started_at" : experience.started_at,
+                "ended_at" : experience.ended_at,
+                "is_ongoing" : experience.is_ongoing,
+                "highlight_experience" : experience.highlight_experience,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
 
 
 @login_required(login_url="/login/")
@@ -158,7 +176,7 @@ def delete_experience(request, experience_id):
     if not request.user.is_superuser:
         raise PermissionDenied
     
-    experience = get_object_or_404(Education, pk=experience_id)
+    experience = get_object_or_404(Experience, pk=experience_id)
 
     if request.method == "POST":
         experience.delete()
@@ -206,14 +224,8 @@ def update_experience(request, experience_id):
 
 
 def edit_experience(request):
-    json_response = get_experience_json(request)
-
-    experiences = serializers.deserialize('json', json_response.content.decode("utf-8"))
-    experiences = [experience.object for experience in experiences]
-
     context = {
-        "name": "Aksara Putra Fachruddin",
-        "experience_list": experiences
+        "name": "Aksara Putra Fachruddin"
     }
     return render(request, "edit-templates/experience_edit.html", context)
 
@@ -229,6 +241,25 @@ def toggle_star_experience(request, experience_id):
             experience.starred_by.add(request.user)
 
     return redirect("main:show_experience")
+
+
+@require_POST
+def create_experience_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Only the owner of portofolio that can add an experience."},
+            status=403,
+        )
+
+    form = ExperienceForm(request.POST or None)
+    if form.is_valid():
+        experience = form.save()
+        return JsonResponse(
+            {"message": "The experience has been added successfully.", "pk": str(experience.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
 
 # --------- #
