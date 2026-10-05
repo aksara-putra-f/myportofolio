@@ -66,6 +66,14 @@
         - Item-item project dapat diurutkan berdasarkan nama projek dan jumlah star projek
         - Item-item experience dapat diurutkan berdasarkan title experience, jumlah star, dan waktu selesai
 
+- **Minggu, 4 Oktober 2026**
+    - Membuat proses pemerolehan data project dengan AJAX
+
+- **Senin, 5 Oktober 2026**
+    - Memperbaiki kegagalan fetch data pada page section Project
+    - Mengimplementasikan pemerolehan data project dengan AJAX pada page edit project
+    - Mengimplementasikan pemerolehan data experience dengan AJAX pada page experience dan edit experience
+
 # Log Penggunaan AI
 **Tanggal:** Sabtu, 5 September 2026
 
@@ -171,3 +179,10 @@ Pada model, kita membuat rancangan atribut-atribut data untuk suatu class model 
 
 ### Tugas 4
 Pertanyaan reflektif untuk tugas 4 ditiadakan
+
+### Tugas 5
+1. Debouncing adalah teknik untuk menunda eksekusi fungsi untuk beberapa saat. Misalnya, pada fitur live searching, web tidak akan mengirim request fetch data jika user mengetik tanpa jeda pada search input dan baru akan melakukan request jika user menjeda ketikannya selama beberapa saat (misalkan 300 ms). Debouncing dilakukan dalam live searching agar web tidak melakukan request tiap kali user mengetikan karakter pada search input sehingga performa web dapat lebih optimal.
+
+2. Keyword ```await``` memungkinkan program untuk berhenti dulu selama beberapa saat sebelum lanjut mengeksekusi baris berikutnya. Keyword tersebut salah satunya digunakan ketika kita menggunakan function fetch(). Functiong fetch() adalah function yang membutuhkan waktu sebelum memberikan hasil sebenarnya. Pada awalnya, fetch() akan menghasilkan ```promise```. Jika kita tidak menggunakan keyword ```awai```, program akan langsung berlanjut ke kode berikutnya tanpa memberikan waktu bagi fetch() untuk menyelesaikan prosesnya dan memberikan hasil sebenarnya. Dengan menggunakan keyword ```awai```, kita membuat program menunggu dulu sampai fetch() selesai menjalankan proses dan memberikan hasil yang sebenarnya, lalu program dapat lanjut mengeksekusi kode-kode berikutnya.
+
+3. Cross-Site Scripting (XSS) adalah serangan ketika penyerang berhasing menyisipkan script JavaScript miliknya ke dalam web kita, lalu dijalankan pada browser user. Salah satu caranya adalah dengan memasukkan script sebagai input form pada web. AJAX/Javascript lebih rentan terhadap serangan ini karena ada hal yang tidak dilakukan oleh AJAX/Javascript, yaitu auto-escaping. Auto-escaping memungkinkan karakter-karakter spesial pada tag html, seperti '<', '>', dan lain-lain diubah menjadi ```&gt;```, ```&gt;```, dan lain-lain. Template django akan melakukan auto-escaping, sedangkan AJAX/Javascript tidak melakukannya. Dengan begitu, jika user memasukkan ```<script>.....</script>``` melalui form web, lalu data pada page diperoleh dengan AJAX/Javascript, browser akan mengira field data tersebut sebagai sebuah script, bukan sebagai teks biasa. 
