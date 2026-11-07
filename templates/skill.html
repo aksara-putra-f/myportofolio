@@ -28,7 +28,7 @@
                 </div>
                 <form method="get"
                       action="{% url 'main:show_skill' %}"
-                      class="search-bar skill-search-bar">
+                      class="search-bar" id="skill-search-bar">
                       <input type="search"
                              name="skill_name"
                              value="{{ skill_name_query }}"
@@ -37,7 +37,26 @@
                              aria-label="Search based on the skill name">
                       <button type="submit" class="button">Search</button>
                 </form>
-                <div class="section-container" id="skill-container">
+                <!-- Loading State -->
+                <div id="loading" class="empty-state hide">
+                    <p>Loading skills...</p>
+                </div>
+
+                <!-- Error State -->
+                <div id="error" class="empty-state hide">
+                    <p>Failed to load skills data. Please try again.</p>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty" class="empty-state hide">
+                    <p>No skill has been added or found.</p>
+                </div>
+
+                <!-- Education Container -->
+                <div class="section-container hide" id="skill-container"></div>
+
+
+                <!-- <div class="section-container" id="skill-container">
                     {% if skill_name_query %}
                     <div class="search-result-container" id="skill-search-result-container">
                         {% for skill in skill_list %}
@@ -79,8 +98,246 @@
                         </div>
                     </div>
                     {% endif %}
-                </div>
+                </div> -->
+
+
+
             </div>
         </section>
     </main>
+    <script>
+        const BASE_SKILL_ENDPOINT = "{% url 'api:skill_list' %}";
+        const DETAIL_SKILL_ENDPOINT = "{% url 'api:skill_detail' '00000000-0000-0000-0000-000000000000' %}";
+        const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+        const IS_AUTHENTICATED = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
+
+        const loadingState = document.getElementById('loading');
+        const errorState = document.getElementById('error');
+        const emptyState = document.getElementById('empty');
+        const skillContainer = document.getElementById('skill-container');
+       
+        const searchBar = document.getElementById("skill-search-bar");
+        const searchInput = document.querySelector(".search_input");
+       
+        const skillForm = document.getElementById('skill-form');
+       
+        let skillsAbortController;
+        let searchDebounceTimer;
+
+        function getCookie(name) {
+            const prefix = `${name}=`;
+            const cookie = document.cookie.split(';').map(value => value.trim())
+                .find(value => value.startsWith(prefix));
+            return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : null;
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '').replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+        }
+
+        function skillEndpoint(pattern, id) {
+            return pattern.replace('00000000-0000-0000-0000-000000000000', id);
+        }
+
+        function displayPageSection({ showLoading = false, showError = false,
+            showEmpty = false, showContainer = false }) {
+            loadingState.classList.toggle('hide', !showLoading);
+            errorState.classList.toggle('hide', !showError);
+            emptyState.classList.toggle('hide', !showEmpty);
+            skillContainer.classList.toggle('hide', !showContainer);
+        }
+
+        function buildSkillCardElement(skillData) {
+            let result;
+
+            const hardSkillItem = skillData.hardskills.length?   
+                skillData.hardskills.map(skill =>
+                    `
+                    <article class="tooltip card skill-card">
+                        <p class="skill-name">${escapeHtml(skill.name)}</p>
+                        <p class="tooltip-info skill-desc">${escapeHtml(skill.short_desc)}</p>
+                    </article>
+                    `
+                
+            ).join("\n") : `<p class="empty-state">No skill has been added or found</p>`;
+
+            const softSkillItem = skillData.softskills.length ?  
+                skillData.softskills.map(skill => 
+                    `
+                    <article class="tooltip card skill-card">
+                        <p class="skill-name">${escapeHtml(skill.name)}</p>
+                        <p class="tooltip-info skill-desc">${escapeHtml(skill.short_desc)}</p>
+                    </article>
+                    `
+                
+            ).join("\n") : `<p class="empty-state">No skill has been added or found</p>`
+        
+            result = `
+            <div id="hardskill-container">
+                <h2 class="skill-category-title">Hardskill</h2>
+                <div class="skill-grid" id="hardskill">
+                    ${hardSkillItem}
+                </div>
+            </div>
+            <div id="softskill-container">
+                <h2 class="skill-category-title">Softskill</h2>
+                <div class="skill-grid" id="softskill">
+                    ${softSkillItem}
+                </div>
+            </div>`;
+
+            return result;
+        }
+
+        async function fetchSkills(searchQuery = '') {
+            if (skillsAbortController) skillsAbortController.abort();
+            
+            skillsAbortController = new AbortController();
+            
+            try {
+                displayPageSection({ showLoading: true });
+                
+                const url = new URL(BASE_SKILL_ENDPOINT, window.location.origin);
+                
+                if (searchQuery) {
+                    url.searchParams.set('skill_name', searchQuery);
+                }
+                
+                const response = await fetch(url, {
+                    headers: { Accept: 'application/json' },
+                    signal: skillsAbortController.signal,
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const skillData = await response.json();
+                skillContainer.innerHTML = buildSkillCardElement(skillData);
+                
+                displayPageSection({ 
+                    showContainer: skillData.hardskills.length > 0 || skillData.softskills.length > 0, 
+                    showEmpty: skillData.hardskills.length === 0 && skillData.softskills.length === 0 
+                });
+            } catch (error) {
+                if (error.name === 'AbortError') return;
+                console.error(error);
+                displayPageSection({ showError: true });
+            }
+        }
+
+        function apiErrorMessage(data, status) {
+            const messages = Object.values(data).flat().filter(value => typeof value === 'string');
+            return messages.join(' ') || `Request failed (HTTP ${status}).`;
+        }
+
+        async function writeSkill(url, method, payload) {
+            const isFormData = payload instanceof FormData;
+
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    Accept: 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: payload === undefined ? undefined : (isFormData ? payload : JSON.stringify(payload)),
+            });
+            if (!isFormData) {
+                response['content_type'] = 'application/json';
+            }
+
+            if (response.status === 204) return null;
+            
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(apiErrorMessage(data, response.status));
+            
+            return data;
+        }
+
+        async function addSkill(event) {
+            event.preventDefault();
+
+            const button = skillForm.querySelector(
+                'button[type="submit"]'
+            );
+
+            button.disabled = true;
+
+            try {
+                const fields = new FormData(skillForm);
+
+                fields.set(
+                    'highlight_skill',
+                    skillForm.elements.namedItem('highlight_skill').checked
+                        ? 'true'
+                        : 'false'
+                );
+
+                await writeSkill(BASE_SKILL_ENDPOINT,'POST', fields);
+
+                skillForm.reset();
+
+                document.getElementById('add-skill-modal').hidePopover();
+
+                showToast(
+                    'Success',
+                    'Skill created.',
+                    'success'
+                );
+
+                await fetchSkills();
+
+            } catch (error) {
+                showToast(
+                    'Could not create skill',
+                    error.message,
+                    'error'
+                );
+
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        if (skillForm) skillForm.addEventListener('submit', addSkill);
+
+        skillContainer.addEventListener('click', async function(event) {
+            const button = event.target.closest('button[data-action]');
+            if (!button || button.disabled) return;
+            
+            const action = button.dataset.action;
+            if (action === 'delete' && !window.confirm('Delete this skill?')) return;
+            
+            button.disabled = true;
+            try {
+                const pattern = DETAIL_SKILL_ENDPOINT;
+                await writeSkill(
+                    skillEndpoint(pattern, button.dataset.id),
+                    'DELETE'
+                );
+                
+                showToast('Success', 'Skill deleted.', 'success');
+                await fetchSkills();
+            } catch (error) {
+                showToast('Request failed', error.message, 'error');
+            } finally {
+                button.disabled = false;
+            }
+        });
+
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => fetchSkills(searchInput.value.trim()), 300);
+        });
+
+        searchBar.addEventListener('submit', function(event) {
+            event.preventDefault();
+            clearTimeout(searchDebounceTimer);
+            fetchSkills(searchInput.value.trim());
+        });
+
+        fetchSkills();
+    </script>        
 {% endblock content %}

@@ -477,6 +477,10 @@ h1, .brand {
     gap: 2rem;
 }
 
+.section-page .skill-grid .empty-state {
+    grid-column: 1 / -1;
+}
+
 .section-page .skill-category-title{
     display: flex;
     justify-content: center;

@@ -8,9 +8,9 @@ from rest_framework.decorators import (
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from main.models import Project, Education
+from main.models import Project, Education, Skill
 from main.permissions import IsPortfolioOwnerOrReadOnly, IsPortfolioOwnerOrEditorOrReadOnly
-from main.serializers import ProjectSerializer, EducationSerializer
+from main.serializers import ProjectSerializer, EducationSerializer, SkillSerializer
 
 # -------------------------------------------------------------------------
 # Project Section
@@ -108,8 +108,8 @@ def education_list(request: HttpRequest):
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['GET', 'HEAD', 'PUT', 'PATCH', 'DELETE'])
+@authentication_classes([SessionAuthentication])
 @permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
-@authentication_classes([IsAuthenticated])
 def education_detail(request: HttpRequest, education_id):
     education = get_object_or_404(Education, pk=education_id)
 
@@ -126,4 +126,54 @@ def education_detail(request: HttpRequest, education_id):
     )
     serializer.is_valid(raise_exception=True)
     serializer.save()
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# -------------------------------------------------------------------------
+# Skill Section
+# -------------------------------------------------------------------------
+@api_view(["GET", "HEAD", "POST"])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
+def skill_list(request: HttpRequest):
+    if request.method in ("GET", "HEAD"):
+        skills = Skill.objects.all()
+
+        search_query = request.query_params.get("skill_name","").strip()
+        if search_query:
+            skills = skills.filter(name__icontains=search_query)
+
+        hardskill = SkillSerializer(
+            skills.filter(skill_category="hardskill"), many=True
+        )
+        softskill = SkillSerializer(
+            skills.filter(skill_category="softskill"), many=True
+        )
+
+        return Response({"hardskills" : hardskill.data, "softskills" : softskill.data}, status=status.HTTP_200_OK)
+
+    serializer = SkillSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE"])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
+def skill_detail(request: HttpRequest, skill_id):
+    skill = get_object_or_404(Skill, pk=skill_id)
+    
+    if request.method in ("GET", "HEAD"):  
+        serializer = SkillSerializer(skill, many=False)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    if request.method in ("DELETE"):
+        skill.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    serializer = SkillSerializer(request.data, partial=request.method == "PATCH")
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+
     return Response(serializer.data, status=status.HTTP_200_OK)

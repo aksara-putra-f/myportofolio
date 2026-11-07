@@ -1,7 +1,15 @@
 from django.utils.html import strip_tags
 from rest_framework import serializers
 
-from main.models import Project, Education
+from main.models import Project, Education, Skill
+
+class ComaSeparatedList(serializers.Field):
+    def to_representation(self, value):
+        if not value:
+            return []
+
+        return [item.strip() for item in value.split(",")]
+
 
 # Serializer untuk data-data project
 class ProjectSerializer(serializers.ModelSerializer):
@@ -41,14 +49,6 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 # Serializer untuk data-data education
-class ComaSeparatedList(serializers.Field):
-    def to_representation(self, value):
-        if not value:
-            return []
-
-        return [item.strip() for item in value.split(",")]
-
-
 class EducationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Education
@@ -86,3 +86,27 @@ class EducationSerializer(serializers.ModelSerializer):
         value['year_start'] = year_start
         value['year_end'] = year_end
         return value        
+
+
+# Serializer untuk data-data skill
+class SkillSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Skill
+        fields = [
+            'id', 'name', 'short_desc', 'skill_category', 'highlight_skill'
+        ]
+        read_only_fields = ['id']
+
+    def validate_name(self, data):
+        data = strip_tags(data).strip()
+        if not data:
+            raise serializers.ValidationError("Skill name cannot be empty.")
+
+        return data
+
+    def validate_short_desc(self, data):
+        data = data.strip()
+        if not data:
+            raise serializers.ValidationError("Skill short description cannot be empty.")
+
+        return data

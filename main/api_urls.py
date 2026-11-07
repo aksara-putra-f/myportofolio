@@ -9,4 +9,7 @@ urlpatterns = [
 
     path("educations/", api_views.education_list, name="education_list"),
     path("educations/<uuid:education_id>/", api_views.education_detail, name="education_detail"),
+
+    path("skills/", api_views.skill_list, name="skill_list"),
+    path("skills/<uuid:skill_id>/", api_views.skill_detail, name="skill_detail"),
 ]
