@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block meta %}
     <title>Education - {{ name }}</title>
 {% endblock meta %}
@@ -31,36 +32,256 @@
                       class="search-bar education-search-bar">
                     <input type="search"
                            name="institution_name"
-                           value="{{ institution_name_query }}"
                            placeholder="Search based on the institution name"
                            class="search_input"
                            aria-label="Search based on the institution name">
                     <button type="submit" class="button">Search</button>
                 </form>
-                <div class="section-container" id="education-container">
-                    {% for education in education_list %}
-                        <article class="education-card">
-                            <img class="institution-logo" src="{{ education.institution_logo.url }}" alt="education.name">
-                            <div class="education-info">
-                                <p class="education-desc">
-                                    <span class="institution">{{ education.institution_name }}</span><br>
-                                    <span class="major">{{ education.major }}</span>
-                                </p>
-                                <p class="education-term">{{ education.year_start }} - {{ education.year_end }}</p>
-                                <ul class="activities">
-                                    {% for activity in education.activity_list %}
-                                    <li>{{ activity }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </article>
-                    {% empty %}
-                        <p class="empty-state">
-                            No education background has been added.
-                        </p>
-                    {% endfor %}
+                <!-- Loading State -->
+                <div id="loading" class="empty-state hide">
+                    <p>Loading educations...</p>
                 </div>
+
+                <!-- Error State -->
+                <div id="error" class="empty-state hide">
+                    <p>Failed to load educations data. Please try again.</p>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty" class="empty-state hide">
+                    <p>No education has been added or found.</p>
+                </div>
+
+                <!-- Education Container -->
+                <div class="section-container hide" id="education-container"></div>
             </div>
         </section>
     </main>
+    <script>
+        const EDUCATION_LIST_ENDPOINT = "{% url 'api:education_list' %}";
+        const EDUCATION_DETAIL_ENDPOINT = "{% url 'api:education_detail' '00000000-0000-0000-0000-000000000000' %}";
+        const USER_IS_AUTHENTICATED = "{{ request.user.is_authenticated | yesno:'true,false' }}" === "true";
+        const USER_IS_SUPERUSER = "{{ request.user.is_superuser | yesno:'true,false' }}" === "true";
+
+        const loadingState = document.getElementById("loading");
+        const errorState = document.getElementById("error");
+        const emptyState = document.getElementById("empty");
+        const educationContainer = document.getElementById("education-container");
+
+        const educationSearchForm = document.querySelector(".education-search-bar");
+        const searchInputBar = document.querySelector(".search_input");
+
+        const educationForm = document.getElementById("education-form");
+
+        let educationsAbortController;
+        let searchDebounceTimer;
+
+        function getCookie(name) {
+            const prefix = `${name}=`;
+            const cookie = document.cookie.split(';').map(value => value.trim())
+                .find(value => value.startsWith(prefix));
+            return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : null;
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '').replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+        }
+
+        function educationEndpoint(pattern, id) {
+            return pattern.replace('00000000-0000-0000-0000-000000000000', id);
+        }
+
+        function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
+            loadingState.classList.toggle('hide', !showLoading);
+            errorState.classList.toggle('hide', !showError);
+            emptyState.classList.toggle('hide', !showEmpty);
+            educationContainer.classList.toggle('hide', !showGrid);
+        }
+
+        function buildEducationCardElement(education) {
+            const educationId = education.id;
+
+            const articleElement = document.createElement('article');
+            articleElement.className = 'education-card';
+
+            let institutionLogo = education.institution_logo ? 
+                `<img class="institution-logo" src="${education.institution_logo}" alt="${ escapeHtml(education.institution_name) }">` :
+                `<img class="institution-logo" src="{% static 'img/no_image_square.png' %}" alt="${ escapeHtml(education.institution_name) }">`;
+
+            const deleteButton = USER_IS_SUPERUSER
+                ? `<button type="button" class="button button-danger" data-action="delete" data-id="${escapeHtml(educationId)}">
+                        Delete
+                   </button>`
+                : '';
+
+            const activitiesHtml = education.activities.length ? 
+                   `<ul class="activities">
+                        ${education.activities.map(activity => `<li>${escapeHtml(activity)}</li>`).join('\n')}
+                    </ul>`
+                    : ``;
+
+            articleElement.innerHTML = `
+                ${institutionLogo}
+                <div class="education-info">
+                    <p class="education-desc">
+                        <span class="institution">${ education.institution_name }</span><br>
+                        <span class="major">${ education.major }</span>
+                    </p>
+                    <p class="education-term">${ education.year_start } - ${ education.year_end }</p>
+                    ${activitiesHtml}
+                </div>
+            `;
+
+            return articleElement;
+        }
+
+        async function fetchEducations(searchQuery = '') {
+            if (educationsAbortController) educationsAbortController.abort();
+            
+            educationsAbortController = new AbortController();
+            
+            try {
+                displayPageSection({ showLoading: true });
+                
+                const url = new URL(EDUCATION_LIST_ENDPOINT, window.location.origin);
+                
+                if (searchQuery) {
+                    url.searchParams.set('institution_name', searchQuery);
+                }
+                
+                const response = await fetch(url, {
+                    headers: { Accept: 'application/json' },
+                    signal: educationsAbortController.signal,
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const educations = await response.json();
+                educationContainer.replaceChildren(...educations.map(buildEducationCardElement));
+                
+                displayPageSection({ 
+                    showGrid: educations.length > 0, 
+                    showEmpty: educations.length === 0 
+                });
+            } catch (error) {
+                if (error.name === 'AbortError') return;
+                console.error(error);
+                displayPageSection({ showError: true });
+            }
+        }
+
+        function apiErrorMessage(data, status) {
+            const messages = Object.values(data).flat().filter(value => typeof value === 'string');
+            return messages.join(' ') || `Request failed (HTTP ${status}).`;
+        }
+
+        async function writeEducation(url, method, payload) {
+            const isFormData = payload instanceof FormData;
+
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    Accept: 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: payload === undefined ? undefined : (isFormData ? payload : JSON.stringify(payload)),
+            });
+            if (!isFormData) {
+                response['content_type'] = 'application/json';
+            }
+
+            if (response.status === 204) return null;
+            
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(apiErrorMessage(data, response.status));
+            
+            return data;
+        }
+
+        async function addEducation(event) {
+            event.preventDefault();
+
+            const button = educationForm.querySelector(
+                'button[type="submit"]'
+            );
+
+            button.disabled = true;
+
+            try {
+                const fields = new FormData(educationForm);
+
+                const mediaInput = educationForm.elements.namedItem('media');
+                if (!mediaInput.files.length) {
+                    fields.delete('media');
+                }
+
+                await writeEducation(EDUCATION_LIST_ENDPOINT, 'POST', fields);
+
+                educationForm.reset();
+
+                document.getElementById('add-education-modal').hidePopover();
+
+                showToast(
+                    'Success',
+                    'education created.',
+                    'success'
+                );
+
+                await fetchEducations();
+
+            } catch (error) {
+                showToast(
+                    'Could not create education',
+                    error.message,
+                    'error'
+                );
+
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        if (educationForm) educationForm.addEventListener('submit', addEducation);
+
+        educationContainer.addEventListener('click', async function(event) {
+            const button = event.target.closest('button[data-action]');
+            if (!button || button.disabled) return;
+            
+            const action = button.dataset.action;
+            if (action === 'delete' && !window.confirm('Delete this education?')) return;
+            
+            button.disabled = true;
+            try {
+                const pattern = EDUCATION_DETAIL_ENDPOINT;
+                await writeEducation(
+                    educationEndpoint(pattern, button.dataset.id),
+                    'DELETE'
+                );
+                
+                showToast('Success', 'education deleted.', 'success');
+                await fetchEducations();
+            } catch (error) {
+                showToast('Request failed', error.message, 'error');
+            } finally {
+                button.disabled = false;
+            }
+        });
+
+        searchInputBar.addEventListener('input', function(event) {
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => fetchEducations(searchInputBar.value.trim()), 300);
+        });
+
+        educationSearchForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            clearTimeout(searchDebounceTimer);
+            fetchEducations(searchInputBar.value.trim());
+        });
+
+        fetchEducations(searchInputBar.value.trim());
+    </script>
 {% endblock content %}

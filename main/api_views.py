@@ -1,3 +1,4 @@
+from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
@@ -7,15 +8,17 @@ from rest_framework.decorators import (
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from main.models import Project
-from main.permissions import IsPortfolioOwnerOrReadOnly
-from main.serializers import ProjectSerializer
+from main.models import Project, Education
+from main.permissions import IsPortfolioOwnerOrReadOnly, IsPortfolioOwnerOrEditorOrReadOnly
+from main.serializers import ProjectSerializer, EducationSerializer
 
-
+# -------------------------------------------------------------------------
+# Project Section
+# -------------------------------------------------------------------------
 @api_view(["GET", "HEAD", "POST"])
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsPortfolioOwnerOrReadOnly])
-def project_list(request):
+def project_list(request: HttpRequest):
     if request.method in ("GET", "HEAD"):
         projects = Project.objects.prefetch_related("starred_by").order_by("project_name", "id")
         project_type = request.query_params.get("project_type", "").strip()
@@ -44,7 +47,7 @@ def project_list(request):
 @api_view(["GET", "HEAD", "PUT", "PATCH", "DELETE"])
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsPortfolioOwnerOrReadOnly])
-def project_detail(request, project_id):
+def project_detail(request: HttpRequest, project_id):
     project = get_object_or_404(
         Project.objects.prefetch_related("starred_by"), pk=project_id,
     )
@@ -68,7 +71,7 @@ def project_detail(request, project_id):
 @api_view(["POST"])
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
-def project_star(request, project_id):
+def project_star(request: HttpRequest, project_id):
     project = get_object_or_404(Project, pk=project_id)
     if project.starred_by.filter(pk=request.user.pk).exists():
         project.starred_by.remove(request.user)
@@ -76,3 +79,51 @@ def project_star(request, project_id):
         project.starred_by.add(request.user)
     serializer = ProjectSerializer(project, context={"request": request})
     return Response(serializer.data)
+
+
+# -------------------------------------------------------------------------
+# Education Section
+# -------------------------------------------------------------------------
+@api_view(['GET', 'HEAD', 'POST'])
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
+def education_list(request: HttpRequest):
+    if request.method in ('GET', 'HEAD'):
+        educations = Education.objects.all().order_by("-year_start")
+
+        search_query = request.query_params.get("institution_name", "").strip()
+        if search_query:
+            educations = educations.filter(institution_name__icontains = search_query)
+
+        serializer = EducationSerializer(
+            educations,
+            many=True
+        )
+
+        return Response(serializer.data)
+
+    serializer = EducationSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['GET', 'HEAD', 'PUT', 'PATCH', 'DELETE'])
+@permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
+@authentication_classes([IsAuthenticated])
+def education_detail(request: HttpRequest, education_id):
+    education = get_object_or_404(Education, pk=education_id)
+
+    if request.method in ('GET', 'HEAD'):
+        serializer = EducationSerializer(education, many=False)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    if request.method in ('DELETE'):
+        education.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    serializer = EducationSerializer(
+        education, data=request.data, partial=request.method == "PATCH"
+    )
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, status=status.HTTP_200_OK)
