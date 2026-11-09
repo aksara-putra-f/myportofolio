@@ -337,6 +337,11 @@
         if (projectForm) projectForm.addEventListener('submit', addProject);
 
         document.addEventListener('click', async function(event) {
+            if (!IS_AUTHENTICATED) {
+                showToast('Request failed', "Login is required to give a star", 'error');
+                return;
+            }
+
             const starButton = event.target.closest(".button-star");
             if (!starButton) {
                 return;
