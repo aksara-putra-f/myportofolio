@@ -9,52 +9,51 @@
 # Progress Mingguan
 
 - **Sabtu, 5 September 2026 (11:53 - 21:00 WIB)**
-
   - Membuat struktur konten untuk web portofolio bagian 'Project' pada file index.html
   - Membuat struktur konten untuk web portofolio bagian 'Education' pada file index.html
   - Membuat struktur konten untuk web portofolio bagian 'Experience' pada file index.html
   - Membuat struktur konten untuk web portofolio bagian 'Project' pada file index.html
+
 - **Minggu, 6 September 2026 (09:00 - 13:39 WIB)**
-
   - Membuat aturan styling untuk web portofolio bagian "Projects"
+
 - **Minggu, 6 September 2026 (15:39 - 17:48 WIB)**
-
   - Membuat aturan styling untuk web portofolio bagian "Skills"
+
 - **Minggu, 6 Septermber 2026 (19:51 - 22:21 WIB)**
-
   - Membuat aturan styling untuk web portofolio bagian "Experiences"
-- **Senin, 7 September 2026 (10:49 - 15:14 WIB)**
 
+- **Senin, 7 September 2026 (10:49 - 15:14 WIB)**
   - Mengatur posisi dan menambahkan outline pada card-card di section Skills dan Projects
   - Membuat aturan styling untuk section education pada web portofolio
   - Melakukan merge pada setiap fitur ke main untuk melakukan uji hasil web app untuk tampilan desktop
+
 - **Senin, 7 September 2026 (15:38 - 18:10 WIB)**
-
   - Membuat aturan styling pada section Education, Skill, Experience, dan Project untuk tampilan mobile
-- **Senin, 7 September 2026 (21:12 WIB)**
 
+- **Senin, 7 September 2026 (21:12 WIB)**
   - Mengatur text alignment bio pada section 'About Me' menjadi justify
   - Mengatur gambar foto diri untuk berada di tengah layar pada tampilan mobile
-- **Sabtu, 12 September - Minggu, 13 September 2026**
 
+- **Sabtu, 12 September - Minggu, 13 September 2026**
   - Membuat model data untuk Experience, Skill, Project, dan Education
   - Membuat template untuk section Experience, Skill, Project, dan Education
   - Membuat path pada urls.py untuk mendapatkan view template section Experience, Skill, Project, dan Education ketika mendapatkan request
+
 - **Minggu, 13 September 2026**
-
   - Membuat aturan styling pada style.css untuk template page section Experience, Skill, Project, dan Education
-- **Senin, 14 September 2026**
 
+- **Senin, 14 September 2026**
   - Mengubah tampilan pada index.html menjadi hanya menampilkan ringkasan/highlight dari fitur-fitur informasi pada section Education, Experience, Skill, dan Project.
   - Membuat unit test
+
 - **Minggu, 20 September 2026**
-
   - Membuat form untuk menambahkan data baru dan menambahkan fitur search data untuk setiap page section (Education, Skill, Project, dan Experience)
+
 - **Senin, 21 September 2026**
-
   - Membuat fitur data deletion untuk data Education, Skill, Project, dan Experience
-- **Minggu, 27 September 2026**
 
+- **Minggu, 27 September 2026**
   - Membuat fitur update item Education, Skill, Experience, dan Project
   - Membuat fitur autentifikasi (register, login, logout)
   - Membuat pembatasan permission untuk user dengan kategori tertentu.
@@ -62,19 +61,28 @@
     - User login dan biasa: Hanya bisa melihat dan memberi star
     - User login dan termasuk ke dalam grup Editor: Bisa melihat, memberi star, dan mengedit item yang dibatasi hanya bisa melakukan update item
     - User login dan superuser (admin):bisa melihat, memberi star, menambah item, menghapus item, dan meng-update item
-- **Senin, 28 September 2026**
 
+- **Senin, 28 September 2026**
   - Membuat fitur sorting item Project dan Experience
     - Item-item project dapat diurutkan berdasarkan nama projek dan jumlah star projek
     - Item-item experience dapat diurutkan berdasarkan title experience, jumlah star, dan waktu selesai
+
 - **Minggu, 4 Oktober 2026**
-
   - Membuat proses pemerolehan data project dengan AJAX
-- **Senin, 5 Oktober 2026**
 
+- **Senin, 5 Oktober 2026**
   - Memperbaiki kegagalan fetch data pada page section Project
   - Mengimplementasikan pemerolehan data project dengan AJAX pada page edit project
   - Mengimplementasikan pemerolehan data experience dengan AJAX pada page experience dan edit experience
+
+- **Sabtu, 7 November 2026**
+  - Menerapkan arsitektur REST untuk pengambilan data Skill dan Education
+
+- **Senin, 9 November 2026**
+  - Membuat pop-up form untuk section Education
+  - Membuat tombol delete dan edit untuk item-item Education, Skill, dan Project
+  - Mengubah script untuk pemberian bintang dan delete pada item project
+  - Membuat fungsionalitas delete item untuk Skill, Education, dan Project 
 
 # Log Penggunaan AI
 
