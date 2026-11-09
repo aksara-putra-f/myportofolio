@@ -449,22 +449,15 @@ def create_project_ajax(request):
 # Education #
 # --------- #
 def show_education(request):
-    json_response = get_education_json(request)
-
-    educations = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    educations = [education.object for education in educations]
     institution_name_query = request.GET.get("institution_name", "").strip()
 
     editor_group = Group.objects.get(name="Editor")
     user_is_in_editor_group = editor_group in request.user.groups.all()
 
     context = {
-        "name": "Aksara Putra Fachruddin",
-        "education_list": educations,
-        "institution_name_query": institution_name_query,
+        "name" : "Aksara Putra Fachruddin",
+        "institution_name_query" : institution_name_query,
+        "form": EducationForm(),
         "is_in_editor_group": user_is_in_editor_group
     }
     return render(request, "education.html", context)

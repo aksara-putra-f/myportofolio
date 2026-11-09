@@ -12,11 +12,12 @@
                     <h1>Education</h1>
                     <div class="section-header-action education-header-action">
                         {% if user.is_superuser %}
-                        <a href="{% url 'main:create_education' %}"
-                           class="button add-button education-add-button">
+                        <button type="button"
+                                class="button add-button education-add-button"
+                                popovertarget="add-education-modal">
                             <span aria-hidden="true">+</span>
                             Add Education
-                        </a>
+                        </button>
                         {% endif %}
                         {% if user.is_superuser or is_in_editor_group %}
                         <a href="{% url 'main:edit_education' %}"
@@ -24,6 +25,7 @@
                             <span aria-hidden="true">✎</span>
                             Edit Education
                         </a>
+                        {% include 'components/education_form_modal.html' %}
                         {% endif %}
                     </div>
                 </div>
