@@ -13,18 +13,11 @@
                         {% if user.is_superuser %}
                         <button type="button"
                                 class="button add-button skill-add-button"
-                                popovertarget="add-skill-modal">
+                                popovertarget="skill-form-modal">
                             <span aria-hidden="true">+</span>
                             Add Skill
                         </button>
                         {% include 'components/skill_form_modal.html' %}
-                        {% endif %}
-                        {% if user.is_superuser or is_in_editor_group %}
-                        <a href="{% url 'main:edit_skill' %}"
-                            class="button edit-button">
-                            <span aria-hidden="true">✎</span>
-                            Edit Skill
-                        </a>
                         {% endif %}
                     </div>
                 </div>
@@ -37,7 +30,6 @@
                              placeholder="Search based on the skill name"
                              class="search_input"
                              aria-label="Search based on the skill name">
-                      <button type="submit" class="button">Search</button>
                 </form>
                 <!-- Loading State -->
                 <div id="loading" class="empty-state hide">
@@ -103,32 +95,43 @@
             skillContainer.classList.toggle('hide', !showContainer);
         }
 
+        function buildSkillItem(skill) {
+            return `
+            <div class="skill-item">
+                {% if user.is_superuser or is_in_editor_group %}
+                <div class="skill-actions">
+                    <button class="button action-button edit-button"
+                            data-action="edit"
+                            data-id="${skill.id}"
+                            type="button">Edit</button>
+                    {% if user.is_superuser %}
+                    <button class="button action-button delete-button"
+                            data-action="delete"
+                            data-id="${skill.id}"
+                            type="button">Delete</button>
+                    {% endif %}
+                </div>
+                {% endif %}
+                <article class="tooltip card skill-card">
+                    <p class="skill-name">${escapeHtml(skill.name)}</p>
+                    <p class="tooltip-info skill-desc">${escapeHtml(skill.short_desc)}</p>
+                </article>
+            </div>`;
+        }
+
         function buildSkillCardElement(skillData) {
-            let result;
+            const emptyMessage = `<p class="empty-state">No skill has been added or found</p>`;
 
-            const hardSkillItem = skillData.hardskills.length?   
-                skillData.hardskills.map(skill =>
-                    `
-                    <article class="tooltip card skill-card">
-                        <p class="skill-name">${escapeHtml(skill.name)}</p>
-                        <p class="tooltip-info skill-desc">${escapeHtml(skill.short_desc)}</p>
-                    </article>
-                    `
-                
-            ).join("\n") : `<p class="empty-state">No skill has been added or found</p>`;
+            const hardSkillItem = skillData.hardskills.length
+                ? skillData.hardskills.map(buildSkillItem).join("\n")
+                : emptyMessage;
 
-            const softSkillItem = skillData.softskills.length ?  
-                skillData.softskills.map(skill => 
-                    `
-                    <article class="tooltip card skill-card">
-                        <p class="skill-name">${escapeHtml(skill.name)}</p>
-                        <p class="tooltip-info skill-desc">${escapeHtml(skill.short_desc)}</p>
-                    </article>
-                    `
-                
-            ).join("\n") : `<p class="empty-state">No skill has been added or found</p>`
+            const softSkillItem = skillData.softskills.length
+                ? skillData.softskills.map(buildSkillItem).join("\n")
+                : emptyMessage;
         
-            result = `
+    
+            return `
             <div id="hardskill-container">
                 <h2 class="skill-category-title">Hardskill</h2>
                 <div class="skill-grid" id="hardskill">
@@ -141,8 +144,6 @@
                     ${softSkillItem}
                 </div>
             </div>`;
-
-            return result;
         }
 
         async function fetchSkills(searchQuery = '') {
@@ -257,29 +258,32 @@
 
         if (skillForm) skillForm.addEventListener('submit', addSkill);
 
-        skillContainer.addEventListener('click', async function(event) {
-            const button = event.target.closest('button[data-action]');
-            if (!button || button.disabled) return;
-            
-            const action = button.dataset.action;
-            if (action === 'delete' && !window.confirm('Delete this skill?')) return;
-            
-            button.disabled = true;
+        document.addEventListener('click', async function(event) {
+            const deleteButton = event.target.closest('.delete-button');
+            if (!deleteButton) {
+                return;
+            }
+
+            if (!window.confirm('Delete this skill item?')) {
+                return;
+            }
+
+            deleteButton.disabled = true;
             try {
                 const pattern = DETAIL_SKILL_ENDPOINT;
                 await writeSkill(
-                    skillEndpoint(pattern, button.dataset.id),
+                    skillEndpoint(pattern, deleteButton.dataset.id),
                     'DELETE'
                 );
                 
-                showToast('Success', 'Skill deleted.', 'success');
+                showToast('Success', 'Skill item deleted.', 'success');
                 await fetchSkills();
             } catch (error) {
                 showToast('Request failed', error.message, 'error');
             } finally {
-                button.disabled = false;
+                deleteButton.disabled = false;
             }
-        });
+        })
 
         searchInput.addEventListener('input', function() {
             clearTimeout(searchDebounceTimer);

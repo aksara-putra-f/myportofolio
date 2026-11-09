@@ -623,6 +623,38 @@ h1, .brand {
     border-width: 3px;
 }
 
+.skill-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;          /* jarak tombol ke kartu */
+    width: 200px;
+}
+
+.skill-actions {
+    display: flex;
+    flex-direction: row;   /* tombol sejajar */
+    gap: 8px;
+}
+
+.skill-actions .edit-button,
+.skill-actions .delete-button {
+    background: none;
+    padding: 0px 5px;
+    border: none;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.skill-actions .edit-button:hover {
+    background-color: #263c9b;
+    color: var(--paper);
+}
+
+.skill-actions .delete-button:hover {
+    background-color: #b42318;
+    color: var(--paper);
+}
 
 /* ----------------------------------------------- */
 /* Mengatur aturan styling untuk section Education */
