@@ -14,30 +14,21 @@
                         {% if user.is_superuser %}
                         <button type="button"
                                 class="button add-button education-add-button"
-                                popovertarget="add-education-modal">
+                                popovertarget="education-form-modal">
                             <span aria-hidden="true">+</span>
                             Add Education
                         </button>
-                        {% endif %}
-                        {% if user.is_superuser or is_in_editor_group %}
-                        <a href="{% url 'main:edit_education' %}"
-                           class="button edit-button">
-                            <span aria-hidden="true">✎</span>
-                            Edit Education
-                        </a>
                         {% include 'components/education_form_modal.html' %}
                         {% endif %}
                     </div>
                 </div>
                 <form method="get"
-                      action="{% url 'main:show_education' %}"
                       class="search-bar education-search-bar">
                     <input type="search"
                            name="institution_name"
                            placeholder="Search based on the institution name"
                            class="search_input"
                            aria-label="Search based on the institution name">
-                    <button type="submit" class="button">Search</button>
                 </form>
                 <!-- Loading State -->
                 <div id="loading" class="empty-state hide">
@@ -64,6 +55,7 @@
         const EDUCATION_DETAIL_ENDPOINT = "{% url 'api:education_detail' '00000000-0000-0000-0000-000000000000' %}";
         const USER_IS_AUTHENTICATED = "{{ request.user.is_authenticated | yesno:'true,false' }}" === "true";
         const USER_IS_SUPERUSER = "{{ request.user.is_superuser | yesno:'true,false' }}" === "true";
+        const IS_IN_EDITOR_GROUP = "{{ is_in_editor_group|yesno:'true,false' }}" === "true";
 
         const loadingState = document.getElementById("loading");
         const errorState = document.getElementById("error");
@@ -112,10 +104,11 @@
                 `<img class="institution-logo" src="${education.institution_logo}" alt="${ escapeHtml(education.institution_name) }">` :
                 `<img class="institution-logo" src="{% static 'img/no_image_square.png' %}" alt="${ escapeHtml(education.institution_name) }">`;
 
-            const deleteButton = USER_IS_SUPERUSER
-                ? `<button type="button" class="button button-danger" data-action="delete" data-id="${escapeHtml(educationId)}">
-                        Delete
-                   </button>`
+            const actionButton = USER_IS_SUPERUSER  || IS_IN_EDITOR_GROUP
+                ? `<button type="button" class="action-option-button" data-id="${escapeHtml(educationId)}">
+                        •••
+                   </button>
+                   {% include 'components/item_action_buttons.html' %}`
                 : '';
 
             const activitiesHtml = education.activities.length ? 
@@ -125,18 +118,36 @@
                     : ``;
 
             articleElement.innerHTML = `
-                ${institutionLogo}
+                <div class="logo-term">
+                    ${institutionLogo}
+                    <p class="education-term">${ education.year_start } - ${ education.year_end }</p>
+                </div>
                 <div class="education-info">
+                    <div class="action-menu">
+                        ${actionButton}
+                    </div>
                     <p class="education-desc">
                         <span class="institution">${ education.institution_name }</span><br>
                         <span class="major">${ education.major }</span>
                     </p>
-                    <p class="education-term">${ education.year_start } - ${ education.year_end }</p>
                     ${activitiesHtml}
                 </div>
             `;
 
+            if (IS_IN_EDITOR_GROUP || USER_IS_SUPERUSER) {
+                setActionButtonItemIdData(articleElement.querySelector('.item-action'), educationId);
+            }
             return articleElement;
+        }
+
+        function setActionButtonItemIdData(element, id) {
+            const editButton = element.querySelector('.edit-button');
+            editButton.dataset.id = id;
+            
+            if (USER_IS_SUPERUSER) {
+                const deleteButton = element.querySelector('.delete-button');
+                deleteButton.dataset.id = id;
+            }
         }
 
         async function fetchEducations(searchQuery = '') {
@@ -216,16 +227,16 @@
             try {
                 const fields = new FormData(educationForm);
 
-                const mediaInput = educationForm.elements.namedItem('media');
+                const mediaInput = educationForm.elements.namedItem('institution_logo');
                 if (!mediaInput.files.length) {
-                    fields.delete('media');
+                    fields.delete('institution_logo');
                 }
 
                 await writeEducation(EDUCATION_LIST_ENDPOINT, 'POST', fields);
 
                 educationForm.reset();
 
-                document.getElementById('add-education-modal').hidePopover();
+                document.getElementById('education-form-modal').hidePopover();
 
                 showToast(
                     'Success',
@@ -249,29 +260,32 @@
 
         if (educationForm) educationForm.addEventListener('submit', addEducation);
 
-        educationContainer.addEventListener('click', async function(event) {
-            const button = event.target.closest('button[data-action]');
-            if (!button || button.disabled) return;
-            
-            const action = button.dataset.action;
-            if (action === 'delete' && !window.confirm('Delete this education?')) return;
-            
-            button.disabled = true;
+        document.addEventListener('click', async function(event) {
+            const deleteButton = event.target.closest('.delete-button');
+            if (!deleteButton) {
+                return;
+            }
+
+            if (!window.confirm('Delete this project?')) {
+                return;
+            }
+
+            deleteButton.disabled = true;
             try {
                 const pattern = EDUCATION_DETAIL_ENDPOINT;
                 await writeEducation(
-                    educationEndpoint(pattern, button.dataset.id),
+                    educationEndpoint(pattern, deleteButton.dataset.id),
                     'DELETE'
                 );
                 
-                showToast('Success', 'education deleted.', 'success');
+                showToast('Success', 'Education deleted.', 'success');
                 await fetchEducations();
             } catch (error) {
                 showToast('Request failed', error.message, 'error');
             } finally {
-                button.disabled = false;
+                deleteButton.disabled = false;
             }
-        });
+        })
 
         searchInputBar.addEventListener('input', function(event) {
             clearTimeout(searchDebounceTimer);
@@ -283,6 +297,16 @@
             clearTimeout(searchDebounceTimer);
             fetchEducations(searchInputBar.value.trim());
         });
+
+        document.addEventListener('click', function(event) {
+            const actionButton = event.target.closest(".action-option-button");
+            if (!actionButton) {
+                return;
+            }
+
+            const actionContainer = actionButton.closest('.education-card').querySelector(".item-action");
+            actionContainer.hidden = !actionContainer.hidden;
+        })
 
         fetchEducations(searchInputBar.value.trim());
     </script>

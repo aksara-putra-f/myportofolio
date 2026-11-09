@@ -195,17 +195,21 @@
 
                 ${urlHtml}
             `;
-
-            setActionButtonItemIdData(articleElement.querySelector('.item-action'), projectId);
+            
+            if (IS_SUPERUSER || IS_IN_EDITOR_GROUP) {
+                setActionButtonItemIdData(articleElement.querySelector('.item-action'), projectId);
+            }
             return articleElement;
         }
 
         function setActionButtonItemIdData(element, id) {
             const editButton = element.querySelector('.edit-button');
-            const deleteButton = element.querySelector('.delete-button');
-
             editButton.dataset.id = id;
-            deleteButton.dataset.id = id;
+            
+            if (IS_SUPERUSER) {
+                const deleteButton = element.querySelector('.delete-button');
+                deleteButton.dataset.id = id;
+            }
         }
 
         async function fetchProjects(searchQuery = '') {

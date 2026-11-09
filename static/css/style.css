@@ -633,16 +633,22 @@ h1, .brand {
 
 .section-page .education-card {
     display: grid;
-    grid-template-areas: "logo edu-info";
+    grid-template-areas: "logo-term edu-info";
     grid-template-columns: 192px auto;
-    column-gap: 5px;
+    column-gap: 20px;
     margin: 30px 0px;
     align-items: center;
 }
 
-.section-page .institution-logo {
-    grid-area: logo;
+.section-page .logo-term {
+    grid-area: logo-term;
+    display: flex;
+    flex-direction: column;
+    align-items: center;   
+    gap: 15px;          
+}
 
+.section-page .institution-logo {
     width: 170px;
     height: 170px;
 
@@ -652,15 +658,16 @@ h1, .brand {
     outline-width: 3px;
 
     border-radius: 10px;
+
+    background-color:rgb(255, 255, 255);
 }
 
 .section-page .education-info {
     grid-area: edu-info;
     display: grid;
-    grid-template-areas: 
-        "desc term"
+    grid-template-areas:
+        "desc action" 
         "activity activity";
-    row-gap: 20px;
 }
 
 .section-page .education-info {
@@ -676,21 +683,24 @@ h1, .brand {
     padding: 20px;
 }
 
+#education-section-page .action-menu {
+    grid-area: action;
+    justify-self: right;
+    align-self: self-start;
+    margin-bottom: 10px;
+}
+
 .section-page .education-desc {
     grid-area: desc;
 }
 
 .section-page .education-term {
-    grid-area: term;
-    justify-self: right;
-    align-self: flex-start;
-
-    background-color: var(--line);
+    background-color:rgb(255, 255, 255);
     padding: 4px 7px;
     border-radius: 10px;
-    border-color: var(--accent-dark);
+    border-color: var(--ink);
     border-style: solid;
-    border-width: 5px;
+    border-width: 3px;
     width: 70%;
 
     color: var(--ink);
@@ -700,7 +710,7 @@ h1, .brand {
 
 .section-page .activities {
     grid-area: activity;
-
+    align-self: center;
     padding: 0px 0px 0px 17px;
 }
 

@@ -10,6 +10,16 @@ class ComaSeparatedList(serializers.Field):
 
         return [item.strip() for item in value.split(",")]
 
+    def to_internal_value(self, data):
+        if isinstance(data, list):
+            items = data
+        elif isinstance(data, str):
+            items = data.split(",")
+        else:
+            raise serializers.ValidationError("Activities input must be in the form of string or list.")
+
+        return ", ".join([item.strip() for item in items])
+
 
 # Serializer untuk data-data project
 class ProjectSerializer(serializers.ModelSerializer):
@@ -80,8 +90,8 @@ class EducationSerializer(serializers.ModelSerializer):
         if not (year_start and year_end):
             raise serializers.ValidationError("Education year cannot be empty.")
 
-        if int(year_end) > int(year_start):
-            raise serializers.ValidationError("Education finish year cannot be greater that start year.")
+        if int(year_end) < int(year_start):
+            raise serializers.ValidationError("Education finish year cannot be less than start year.")
 
         value['year_start'] = year_start
         value['year_end'] = year_end
