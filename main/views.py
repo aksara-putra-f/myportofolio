@@ -564,31 +564,18 @@ def edit_education(request):
 #   Skill 
 # --------- #
 def show_skill(request):
-    json_response = get_skill_json(request)
-    
-    skills = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-    skills = [skill.object for skill in skills]
-    hardskill_list = [skill for skill in skills if skill.skill_category=='hardskill']
-    softskill_list = [skill for skill in skills if skill.skill_category=='softskill']
-    skill_name_query = request.GET.get("skill_name", "").strip()
+    skill_name = request.GET.get("skill_name", "").strip()
 
     editor_group = Group.objects.get(name="Editor")
     user_is_in_editor_group = editor_group in request.user.groups.all()
 
     context = {
-        "name": "Aksara Putra Fachruddin",
-        "skill_list": skills,
-        "hardskill_list" : hardskill_list,
-        "softskill_list" : softskill_list,
-        "skill_name_query": skill_name_query,
+        "name" : "Aksara Putra Fachruddin",
+        "skill_name" : skill_name,
+        "form": SkillForm(),
         "is_in_editor_group": user_is_in_editor_group
     }
     return render(request, "skill.html", context)
-
-
 
 @login_required(login_url="/login/")
 def create_skill(request):

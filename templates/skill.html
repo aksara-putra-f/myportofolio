@@ -11,11 +11,13 @@
                     <h1>Skill</h1>
                     <div class="section-header-action skill-header-action">
                         {% if user.is_superuser %}
-                        <a href="{% url 'main:create_skill' %}"
-                            class="button add-button skill-add-button">
+                        <button type="button"
+                                class="button add-button skill-add-button"
+                                popovertarget="add-skill-modal">
                             <span aria-hidden="true">+</span>
                             Add Skill
-                        </a>
+                        </button>
+                        {% include 'components/skill_form_modal.html' %}
                         {% endif %}
                         {% if user.is_superuser or is_in_editor_group %}
                         <a href="{% url 'main:edit_skill' %}"
@@ -54,54 +56,6 @@
 
                 <!-- Education Container -->
                 <div class="section-container hide" id="skill-container"></div>
-
-
-                <!-- <div class="section-container" id="skill-container">
-                    {% if skill_name_query %}
-                    <div class="search-result-container" id="skill-search-result-container">
-                        {% for skill in skill_list %}
-                            <p class="skill-name">{{ skill.name }}</p>
-                            <p class="skill-desc">{{ skill.short_desc }}</p>
-                            {% empty %}
-                            <p class="item-no-found">No '{{ skill_name_query }}' item has been found.</p>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    <div id="hardskill-container">
-                        <h2 class="skill-category-title">Hardskill</h2>
-                        <div class="skill-grid" id="hardskill">
-                            {% for hardskill in hardskill_list %}
-                                <article class="tooltip card skill-card">
-                                    <p class="skill-name">{{ hardskill.name }}</p>
-                                    <p class="tooltip-info skill-desc">{{ hardskill.short_desc }}</p>
-                                </article>
-                            {% empty %}
-                                <p class="empty-state">
-                                    No skill has been added
-                                </p>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div id="softskill-container">
-                        <h2 class="skill-category-title">Softskill</h2>
-                        <div class="skill-grid" id="softskill">
-                            {% for softskill in softskill_list %}
-                                <article class="tooltip card skill-card">
-                                    <p class="skill-name">{{ softskill.name }}</p>
-                                    <p class="tooltip-info skill-desc">{{ softskill.short_desc }}</p>
-                                </article>
-                            {% empty %}
-                                <p class="empty-state">
-                                    No skill has been added.
-                                </p>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endif %}
-                </div> -->
-
-
-
             </div>
         </section>
     </main>
