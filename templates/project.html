@@ -14,17 +14,10 @@
                         {% if user.is_superuser %}
                         <button type="button"
                                 class="button add-button project-add-button"
-                                popovertarget="add-project-modal">
+                                popovertarget="project-form-modal">
                             <span aria-hidden="true">+</span>
                             Add Project
                         </button>
-                        {% endif %}
-                        {% if user.is_superuser or is_in_editor_group %}
-                        <a href="{% url 'main:edit_project' %}"
-                           class="button edit-button">
-                            <span aria-hidden="true">✎</span>
-                            Edit Project
-                        </a>
                         {% endif %}
                     </div>
                 </div>
@@ -55,7 +48,6 @@
                             <option value="star-count" {% if sort_project_query == "star-count" %}selected{% endif %}>Project Star Count</option>
                             <option value="name" {% if sort_project_query == "name" %}selected{% endif %}>Project Name</option>
                       </select>
-                      <button type="submit" class="button">Search</button>
                 </form>
                 <!-- Loading State -->
                 <div id="loading" class="empty-state hide">
@@ -87,6 +79,7 @@
         const DETAIL_PROJECT_ENDPOINT = "{% url 'api:project_detail' '00000000-0000-0000-0000-000000000000' %}";
         const STAR_PROJECT_ENDPOINT = "{% url 'api:project_star' '00000000-0000-0000-0000-000000000000' %}";
         const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+        const IS_IN_EDITOR_GROUP = "{{ is_in_editor_group|yesno:'true,false' }}" === "true";
         const IS_AUTHENTICATED = "{{ user.is_authenticated|yesno:'true,false' }}" === "true";
 
         const loadingState = document.getElementById('loading');
@@ -157,10 +150,11 @@
                 ? `<a class="project-link" href="${project.ext_link}" target="_blank">See the Project</a>`
                 : '';
 
-            const deleteButton = IS_SUPERUSER 
-                ? `<button type="button" class="button button-danger" data-action="delete" data-id="${escapeHtml(projectId)}">
-                        Delete
-                   </button>`
+            const actionButton = IS_SUPERUSER  || IS_IN_EDITOR_GROUP
+                ? `<button type="button" class="action-option-button" data-id="${escapeHtml(projectId)}">
+                        •••
+                   </button>
+                   {% include 'components/item_action_buttons.html' %}`
                 : '';
 
             const isStarredClass = project.is_starred ? " is-starred" : "";
@@ -170,7 +164,7 @@
                 : "Be the first who give star";
 
             const starButton = `<button type="button"
-                                        class="button button-star${isStarredClass}"
+                                        class="button button-star"
                                         data-action="star"
                                         data-id="${escapeHtml(projectId)}"
                                         title="${starTitle}">
@@ -181,13 +175,16 @@
                               `;
 
             articleElement.innerHTML = `
+                <div class="action-menu">
+                    ${actionButton}
+                </div>
+
                 <p class="project-name">
                     ${escapeHtml(project.project_name)}
                 </p>
 
                 <div class="project-actions">
                     ${starButton}
-                    ${deleteButton}
                 </div>
 
                 ${projectMedia}
@@ -199,7 +196,16 @@
                 ${urlHtml}
             `;
 
+            setActionButtonItemIdData(articleElement.querySelector('.item-action'), projectId);
             return articleElement;
+        }
+
+        function setActionButtonItemIdData(element, id) {
+            const editButton = element.querySelector('.edit-button');
+            const deleteButton = element.querySelector('.delete-button');
+
+            editButton.dataset.id = id;
+            deleteButton.dataset.id = id;
         }
 
         async function fetchProjects(searchQuery = '') {
@@ -302,7 +308,7 @@
 
                 projectForm.reset();
 
-                document.getElementById('add-project-modal').hidePopover();
+                document.getElementById('project-form-modal').hidePopover();
 
                 showToast(
                     'Success',
@@ -326,29 +332,55 @@
 
         if (projectForm) projectForm.addEventListener('submit', addProject);
 
-        gridContainer.addEventListener('click', async function(event) {
-            const button = event.target.closest('button[data-action]');
-            if (!button || button.disabled) return;
-            
-            const action = button.dataset.action;
-            if (action === 'delete' && !window.confirm('Delete this project?')) return;
-            
-            button.disabled = true;
+        document.addEventListener('click', async function(event) {
+            const starButton = event.target.closest(".button-star");
+            if (!starButton) {
+                return;
+            }
+
+            starButton.disabled = true;
             try {
-                const pattern = action === 'star' ? STAR_PROJECT_ENDPOINT : DETAIL_PROJECT_ENDPOINT;
+                const pattern = STAR_PROJECT_ENDPOINT;
                 await writeProject(
-                    projectEndpoint(pattern, button.dataset.id),
-                    action === 'star' ? 'POST' : 'DELETE'
+                    projectEndpoint(pattern, starButton.dataset.id),
+                    'POST'
                 );
                 
-                showToast('Success', action === 'star' ? 'Star updated.' : 'Project deleted.', 'success');
+                showToast('Success', 'Star updated.', 'success');
                 await fetchProjects();
             } catch (error) {
                 showToast('Request failed', error.message, 'error');
             } finally {
-                button.disabled = false;
+                starButton.disabled = false;
             }
-        });
+        })
+
+        document.addEventListener('click', async function(event) {
+            const deleteButton = event.target.closest('.delete-button');
+            if (!deleteButton) {
+                return;
+            }
+
+            if (!window.confirm('Delete this project?')) {
+                return;
+            }
+
+            deleteButton.disabled = true;
+            try {
+                const pattern = DETAIL_PROJECT_ENDPOINT;
+                await writeProject(
+                    projectEndpoint(pattern, deleteButton.dataset.id),
+                    'DELETE'
+                );
+                
+                showToast('Success', 'Project deleted.', 'success');
+                await fetchProjects();
+            } catch (error) {
+                showToast('Request failed', error.message, 'error');
+            } finally {
+                deleteButton.disabled = false;
+            }
+        })
 
         projectTypeSelect.addEventListener('input', function() {
             clearTimeout(searchDebounceTimer);
@@ -359,6 +391,16 @@
             clearTimeout(searchDebounceTimer);
             searchDebounceTimer = setTimeout(() => fetchProjects(sortProjectSelect.value.trim()), 300);
         });
+
+        document.addEventListener('click', function(event) {
+            const actionButton = event.target.closest(".action-option-button");
+            if (!actionButton) {
+                return;
+            }
+
+            const actionContainer = actionButton.closest('.project-card').querySelector(".item-action");
+            actionContainer.hidden = !actionContainer.hidden;
+        })
 
         // searchForm.addEventListener('submit', function(event) {
         //     event.preventDefault();
